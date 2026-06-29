@@ -15,10 +15,10 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
   // Primary instruments
   final _depthCtrl = GaugeController(initialValue: 85.0);      // 0–300 m tape
   final _pressCtrl = GaugeController(initialValue: 9.5);       // 0–100 bar radial
-  final _o2Ctrl = GaugeController(initialValue: 78.0);         // 0–100% arc
-  final _co2Ctrl = GaugeController(initialValue: 65.0);        // CO2 scrubber tank
-  final _speedCtrl = GaugeController(initialValue: 6.0);       // 0–20 knots radial
-  final _trimCtrl = GaugeController(initialValue: -2.0);       // ±30° inclinometer
+  final _o2Ctrl = GaugeController(initialValue: 78.0);         // 0–100% tank
+  final _co2Ctrl = GaugeController(initialValue: 800.0);       // 0–5000 ppm arc
+  final _speedCtrl = GaugeController(initialValue: 6.0);       // 0–30 knots radial
+  final _trimCtrl = GaugeController(initialValue: -2.0);       // ±45° inclinometer
 
   // Battery banks (0–100%)
   final _battACtrl = GaugeController(initialValue: 88.0);
@@ -38,7 +38,7 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
   Timer? _timer;
   double _phase = 0.0;
   double _o2Level = 78.0;
-  double _co2Remaining = 65.0;
+  double _co2Ppm = 800.0;
   double _battALevel = 88.0;
   double _battBLevel = 92.0;
   double _battCLevel = 71.0;
@@ -61,16 +61,16 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
       if (_o2Level < 10.0) _o2Level = 78.0;
       _o2Ctrl.value = _o2Level;
 
-      // CO2 scrubber capacity decreases
-      _co2Remaining -= 0.02;
-      if (_co2Remaining < 5.0) _co2Remaining = 65.0;
-      _co2Ctrl.value = _co2Remaining;
+      // CO2 ppm slowly rises
+      _co2Ppm += 1.5;
+      if (_co2Ppm > 4500.0) _co2Ppm = 800.0;
+      _co2Ctrl.value = _co2Ppm;
 
-      // Speed oscillates 4–10 knots
-      _speedCtrl.value = (6.0 + 3.0 * sin(_phase * 0.5)).clamp(0.0, 20.0);
+      // Speed oscillates 4–12 knots (extended range 0–30)
+      _speedCtrl.value = (6.0 + 4.0 * sin(_phase * 0.5) + 2.0 * sin(_phase * 1.1)).clamp(0.0, 30.0);
 
-      // Trim: slight pitch oscillation
-      _trimCtrl.value = (-2.0 + 3.0 * sin(_phase * 0.6)).clamp(-30.0, 30.0);
+      // Trim: slight pitch oscillation ±45°
+      _trimCtrl.value = (-2.0 + 3.0 * sin(_phase * 0.6)).clamp(-45.0, 45.0);
 
       // Battery drain
       _battALevel -= 0.01;
@@ -85,7 +85,7 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
 
       // Update status based on O2 level
       _o2StatusCtrl.value = _o2Level < 20.0 ? 2.0 : (_o2Level < 35.0 ? 1.0 : 0.0);
-      _co2StatusCtrl.value = _co2Remaining < 15.0 ? 2.0 : (_co2Remaining < 25.0 ? 1.0 : 0.0);
+      _co2StatusCtrl.value = _co2Ppm > 3500.0 ? 2.0 : (_co2Ppm > 2000.0 ? 1.0 : 0.0);
       _powerStatusCtrl.value = _battCLevel < 25.0 ? 1.0 : 0.0;
 
       // Pressure warning
@@ -119,6 +119,7 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFF060B14);
+    const cardBg = Color(0xFF1A2A3A);
     const style = ExecutiveGaugeStyle();
     const mode = GaugeMode.instrument;
 
@@ -143,32 +144,41 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
+                color: Color(0xFF060B14),
                 border: Border(bottom: BorderSide(color: Color(0xFF0F2030))),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'SUBMARINE CONTROL ROOM',
+                    'CONTROL ROOM',
                     style: TextStyle(
                       color: Color(0xFF2A7AAA),
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.5,
                     ),
                   ),
                   Row(children: [
                     _SubLed(color: const Color(0xFF225588), label: 'DIVE MODE'),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 16),
                     ListenableBuilder(
                       listenable: _depthCtrl,
-                      builder: (_, __) => Text(
-                        'DEPTH: ${_depthCtrl.value.toStringAsFixed(0)} m',
-                        style: const TextStyle(
-                          color: Color(0xFF44AADD),
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
+                      builder: (_, __) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0A1A2A),
+                          border: Border.all(color: const Color(0xFF44AADD), width: 1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'DEPTH: ${_depthCtrl.value.toStringAsFixed(0)} m',
+                          style: const TextStyle(
+                            color: Color(0xFF44AADD),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
                         ),
                       ),
                     ),
@@ -182,9 +192,9 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // ── Left column: Depth tape + Speed ─────────────────
+                  // ── Left column: Depth tape + digital box ────────────
                   Container(
-                    width: 80,
+                    width: 100,
                     color: const Color(0xFF070C16),
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                     child: Column(
@@ -192,7 +202,6 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
                         const Text('DEPTH', style: labelStyle),
                         const SizedBox(height: 4),
                         Expanded(
-                          flex: 3,
                           child: TapeGauge(
                             controller: _depthCtrl,
                             min: 0,
@@ -205,24 +214,29 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text('SPEED', style: labelStyle),
-                        const SizedBox(height: 4),
-                        Expanded(
-                          flex: 2,
-                          child: RadialGauge(
-                            controller: _speedCtrl,
-                            min: 0,
-                            max: 20,
-                            startAngleDeg: 150,
-                            sweepAngleDeg: 240,
-                            majorDivisions: 5,
-                            showLabels: true,
-                            showNeedle: true,
-                            style: style,
-                            mode: mode,
+                        // Amber digital depth readout
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0A0800),
+                            border: Border.all(color: const Color(0xFFFFBB33), width: 1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: ListenableBuilder(
+                            listenable: _depthCtrl,
+                            builder: (_, __) => Text(
+                              '${_depthCtrl.value.toStringAsFixed(0)} m',
+                              style: const TextStyle(
+                                color: Color(0xFFFFBB33),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                        const Text('knots', style: dimText),
                       ],
                     ),
                   ),
@@ -230,124 +244,127 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
                   // Divider
                   Container(width: 1, color: const Color(0xFF0F2030)),
 
-                  // ── Center column: Pressure + O2 + CO2 + Trim ────────
+                  // ── Center: 2×2 grid of instruments ──────────────────
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
                         children: [
-                          // Hull Pressure + O2 row
+                          // Top row: Speed + Hull Pressure
                           Expanded(
-                            flex: 3,
                             child: Row(
                               children: [
-                                // Hull Pressure radial
+                                // Speed radial (0–30 knots)
                                 Expanded(
-                                  child: Column(
-                                    children: [
-                                      const Text('HULL PRESSURE', style: labelStyle),
-                                      Expanded(
-                                        child: RadialGauge(
-                                          controller: _pressCtrl,
-                                          min: 0,
-                                          max: 100,
-                                          startAngleDeg: 150,
-                                          sweepAngleDeg: 240,
-                                          ranges: const [
-                                            GaugeRange(min: 0, max: 60, color: Color(0xFF0077BB)),
-                                            GaugeRange(min: 60, max: 80, color: Color(0xFFEE7733)),
-                                            GaugeRange(min: 80, max: 100, color: Color(0xFFCC3311)),
-                                          ],
-                                          majorDivisions: 5,
-                                          showLabels: true,
-                                          showNeedle: true,
-                                          style: style,
-                                          mode: mode,
-                                        ),
-                                      ),
-                                      const Text('bar', style: dimText),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(width: 8),
-
-                                // O2 Level arc
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      const Text('O2 LEVEL', style: labelStyle),
-                                      Expanded(
-                                        child: ArcGauge(
-                                          controller: _o2Ctrl,
-                                          min: 0,
-                                          max: 100,
-                                          startAngleDeg: 150,
-                                          sweepAngleDeg: 240,
-                                          centerLabel: 'O2%',
-                                          style: style,
-                                          mode: mode,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          // CO2 Tank + Trim row
-                          Expanded(
-                            flex: 2,
-                            child: Row(
-                              children: [
-                                // CO2 Scrubber tank
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      const Text('CO2 SCRUBBER', style: labelStyle),
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 44,
-                                              child: TankGauge(
-                                                controller: _co2Ctrl,
-                                                min: 0,
-                                                max: 100,
-                                                vertical: true,
-                                                showWave: true,
-                                                style: style,
-                                                mode: mode,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: cardBg,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF1A3A55)),
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: Column(
+                                      children: [
+                                        const Text('SPEED', style: labelStyle),
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                child: RadialGauge(
+                                                  controller: _speedCtrl,
+                                                  min: 0,
+                                                  max: 30,
+                                                  startAngleDeg: 150,
+                                                  sweepAngleDeg: 240,
+                                                  ranges: const [
+                                                    GaugeRange(min: 0, max: 10, color: Color(0xFF228833)),
+                                                    GaugeRange(min: 10, max: 20, color: Color(0xFFEE7733)),
+                                                    GaugeRange(min: 20, max: 30, color: Color(0xFFCC3311)),
+                                                  ],
+                                                  majorDivisions: 6,
+                                                  showLabels: true,
+                                                  showNeedle: true,
+                                                  style: style,
+                                                  mode: mode,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              Align(
+                                                alignment: const Alignment(0, 0.6),
+                                                child: ListenableBuilder(
+                                                  listenable: _speedCtrl,
+                                                  builder: (_, __) => Text(
+                                                    '${_speedCtrl.value.toStringAsFixed(1)} kts',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const Text('capacity %', style: dimText),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
 
                                 const SizedBox(width: 8),
 
-                                // Trim/pitch inclinometer
+                                // Hull Pressure radial (0–100 bar)
                                 Expanded(
-                                  child: Column(
-                                    children: [
-                                      const Text('TRIM / PITCH', style: labelStyle),
-                                      Expanded(
-                                        child: InclinometerGauge(
-                                          controller: _trimCtrl,
-                                          maxAngle: 30,
-                                          style: style,
-                                          mode: mode,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: cardBg,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF1A3A55)),
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: Column(
+                                      children: [
+                                        const Text('HULL PRESSURE', style: labelStyle),
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                child: RadialGauge(
+                                                  controller: _pressCtrl,
+                                                  min: 0,
+                                                  max: 100,
+                                                  startAngleDeg: 150,
+                                                  sweepAngleDeg: 240,
+                                                  ranges: const [
+                                                    GaugeRange(min: 0, max: 60, color: Color(0xFF0077BB)),
+                                                    GaugeRange(min: 60, max: 80, color: Color(0xFFEE7733)),
+                                                    GaugeRange(min: 80, max: 100, color: Color(0xFFCC3311)),
+                                                  ],
+                                                  majorDivisions: 5,
+                                                  showLabels: true,
+                                                  showNeedle: true,
+                                                  style: style,
+                                                  mode: mode,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: const Alignment(0, 0.6),
+                                                child: ListenableBuilder(
+                                                  listenable: _pressCtrl,
+                                                  builder: (_, __) => Text(
+                                                    '${_pressCtrl.value.toStringAsFixed(1)} bar',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -356,16 +373,168 @@ class _SubmarineDashboardScreenState extends State<SubmarineDashboardScreen> {
 
                           const SizedBox(height: 8),
 
-                          // Battery banks
-                          const Text('BATTERY BANKS', style: labelStyle),
-                          const SizedBox(height: 4),
-                          _BatteryRow(label: 'BANK A', ctrl: _battACtrl, style: style, mode: mode),
-                          const SizedBox(height: 4),
-                          _BatteryRow(label: 'BANK B', ctrl: _battBCtrl, style: style, mode: mode),
-                          const SizedBox(height: 4),
-                          _BatteryRow(label: 'BANK C', ctrl: _battCCtrl, style: style, mode: mode),
+                          // Bottom row: O2 Tank + Inclinometer
+                          Expanded(
+                            child: Row(
+                              children: [
+                                // O2 TankGauge with % overlay
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: cardBg,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF1A3A55)),
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: Column(
+                                      children: [
+                                        const Text('O2 LEVEL', style: labelStyle),
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 50,
+                                                      child: TankGauge(
+                                                        controller: _o2Ctrl,
+                                                        min: 0,
+                                                        max: 100,
+                                                        vertical: true,
+                                                        showWave: true,
+                                                        style: style,
+                                                        mode: mode,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 4),
+                                                  child: ListenableBuilder(
+                                                    listenable: _o2Ctrl,
+                                                    builder: (_, __) => Text(
+                                                      '${_o2Ctrl.value.toStringAsFixed(0)}%',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const Text('O2 %', style: dimText),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 8),
+
+                                // Inclinometer pitch ±45° with angle overlay
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: cardBg,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF1A3A55)),
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: Column(
+                                      children: [
+                                        const Text('TRIM / PITCH', style: labelStyle),
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              Positioned.fill(
+                                                child: InclinometerGauge(
+                                                  controller: _trimCtrl,
+                                                  maxAngle: 45,
+                                                  style: style,
+                                                  mode: mode,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 4),
+                                                  child: ListenableBuilder(
+                                                    listenable: _trimCtrl,
+                                                    builder: (_, __) => Text(
+                                                      '${_trimCtrl.value > 0 ? '+' : ''}${_trimCtrl.value.toStringAsFixed(1)}°',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
+                    ),
+                  ),
+
+                  // Divider
+                  Container(width: 1, color: const Color(0xFF0F2030)),
+
+                  // ── Right column: CO2 arc + battery banks ─────────────
+                  Container(
+                    width: 120,
+                    color: const Color(0xFF070C16),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                    child: Column(
+                      children: [
+                        const Text('CO2 LEVEL', style: labelStyle),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          height: 130,
+                          child: ListenableBuilder(
+                            listenable: _co2Ctrl,
+                            builder: (_, __) => ArcGauge(
+                              controller: _co2Ctrl,
+                              min: 0,
+                              max: 5000,
+                              startAngleDeg: 150,
+                              sweepAngleDeg: 240,
+                              centerLabel: '${_co2Ctrl.value.toStringAsFixed(0)} ppm',
+                              style: style,
+                              mode: mode,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+                        Container(height: 1, color: const Color(0xFF0F2030)),
+                        const SizedBox(height: 10),
+
+                        const Text('BATTERY BANKS', style: labelStyle),
+                        const SizedBox(height: 8),
+                        _BatteryRow(label: 'BANK A', ctrl: _battACtrl, style: style, mode: mode),
+                        const SizedBox(height: 6),
+                        _BatteryRow(label: 'BANK B', ctrl: _battBCtrl, style: style, mode: mode),
+                        const SizedBox(height: 6),
+                        _BatteryRow(label: 'BANK C', ctrl: _battCCtrl, style: style, mode: mode),
+                      ],
                     ),
                   ),
                 ],
@@ -415,44 +584,41 @@ class _BatteryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 48,
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Color(0xFF3A7AAA),
-              fontSize: 8,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-        Expanded(
-          child: SizedBox(
-            height: 24,
-            child: SegmentedGauge.battery(
-              controller: ctrl,
-              style: style,
-              mode: mode,
-            ),
-          ),
-        ),
-        const SizedBox(width: 6),
-        ListenableBuilder(
-          listenable: ctrl,
-          builder: (_, __) => SizedBox(
-            width: 36,
-            child: Text(
-              '${ctrl.value.toStringAsFixed(0)}%',
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
               style: const TextStyle(
                 color: Color(0xFF3A7AAA),
-                fontSize: 9,
+                fontSize: 8,
                 fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
               ),
-              textAlign: TextAlign.right,
             ),
+            ListenableBuilder(
+              listenable: ctrl,
+              builder: (_, __) => Text(
+                '${ctrl.value.toStringAsFixed(0)}%',
+                style: const TextStyle(
+                  color: Color(0xFF3A7AAA),
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 3),
+        SizedBox(
+          height: 28,
+          child: SegmentedGauge.battery(
+            controller: ctrl,
+            style: style,
+            mode: mode,
           ),
         ),
       ],

@@ -113,6 +113,13 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                       decoration: BoxDecoration(
                         color: const Color(0xFF2255AA),
                         borderRadius: BorderRadius.circular(8),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x442255AA),
+                            blurRadius: 8,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: const Row(
                         children: [
@@ -194,30 +201,50 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
 
                   const SizedBox(width: 10),
 
-                  // Wind speed card
+                  // Wind speed card with colored zones + live overlay
                   Expanded(
                     child: _WeatherCard(
                       title: 'WIND SPEED',
                       color: cardColor,
                       child: SizedBox(
                         height: 200,
-                        child: RadialGauge(
-                          controller: _windCtrl,
-                          min: 0,
-                          max: 120,
-                          startAngleDeg: 150,
-                          sweepAngleDeg: 240,
-                          ranges: const [
-                            GaugeRange(min: 0, max: 20, color: Color(0xFF0077BB)),
-                            GaugeRange(min: 20, max: 50, color: Color(0xFF228833)),
-                            GaugeRange(min: 50, max: 80, color: Color(0xFFEE7733)),
-                            GaugeRange(min: 80, max: 120, color: Color(0xFFCC3311)),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: RadialGauge(
+                                controller: _windCtrl,
+                                min: 0,
+                                max: 120,
+                                startAngleDeg: 150,
+                                sweepAngleDeg: 240,
+                                ranges: const [
+                                  GaugeRange(min: 0, max: 20, color: Color(0xFF0077BB)),
+                                  GaugeRange(min: 20, max: 50, color: Color(0xFF228833)),
+                                  GaugeRange(min: 50, max: 80, color: Color(0xFFEE7733)),
+                                  GaugeRange(min: 80, max: 120, color: Color(0xFFCC3311)),
+                                ],
+                                majorDivisions: 6,
+                                showLabels: true,
+                                showNeedle: true,
+                                style: style,
+                                mode: mode,
+                              ),
+                            ),
+                            Align(
+                              alignment: const Alignment(0, 0.6),
+                              child: ListenableBuilder(
+                                listenable: _windCtrl,
+                                builder: (_, __) => Text(
+                                  '${_windCtrl.value.toStringAsFixed(0)} km/h',
+                                  style: const TextStyle(
+                                    color: Color(0xFF1A2A4A),
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                          majorDivisions: 6,
-                          showLabels: true,
-                          showNeedle: true,
-                          style: style,
-                          mode: mode,
                         ),
                       ),
                     ),
@@ -236,15 +263,23 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                       color: cardColor,
                       child: SizedBox(
                         height: 150,
-                        child: ArcGauge(
-                          controller: _pressCtrl,
-                          min: 950,
-                          max: 1050,
-                          startAngleDeg: 160,
-                          sweepAngleDeg: 220,
-                          centerLabel: 'hPa',
-                          style: style,
-                          mode: mode,
+                        child: ListenableBuilder(
+                          listenable: _pressCtrl,
+                          builder: (_, __) => ArcGauge(
+                            controller: _pressCtrl,
+                            min: 950,
+                            max: 1050,
+                            startAngleDeg: 160,
+                            sweepAngleDeg: 220,
+                            centerLabel: '${_pressCtrl.value.toStringAsFixed(0)} hPa',
+                            ranges: const [
+                              GaugeRange(min: 950, max: 980, color: Color(0xFF0077BB)),
+                              GaugeRange(min: 980, max: 1020, color: Color(0xFF228833)),
+                              GaugeRange(min: 1020, max: 1050, color: Color(0xFFEE7733)),
+                            ],
+                            style: style,
+                            mode: mode,
+                          ),
                         ),
                       ),
                     ),
@@ -258,15 +293,23 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                       color: cardColor,
                       child: SizedBox(
                         height: 150,
-                        child: ArcGauge(
-                          controller: _humidCtrl,
-                          min: 0,
-                          max: 100,
-                          startAngleDeg: 160,
-                          sweepAngleDeg: 220,
-                          centerLabel: '%RH',
-                          style: style,
-                          mode: mode,
+                        child: ListenableBuilder(
+                          listenable: _humidCtrl,
+                          builder: (_, __) => ArcGauge(
+                            controller: _humidCtrl,
+                            min: 0,
+                            max: 100,
+                            startAngleDeg: 160,
+                            sweepAngleDeg: 220,
+                            centerLabel: '${_humidCtrl.value.toStringAsFixed(0)}% RH',
+                            ranges: const [
+                              GaugeRange(min: 0, max: 30, color: Color(0xFFEE7733)),
+                              GaugeRange(min: 30, max: 70, color: Color(0xFF228833)),
+                              GaugeRange(min: 70, max: 100, color: Color(0xFF0077BB)),
+                            ],
+                            style: style,
+                            mode: mode,
+                          ),
                         ),
                       ),
                     ),
@@ -311,6 +354,18 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                               _UvLabel('V.HIGH', const Color(0xFFCC3311)),
                               _UvLabel('EXT', const Color(0xFF882244)),
                             ],
+                          ),
+                          const SizedBox(height: 8),
+                          ListenableBuilder(
+                            listenable: _uvCtrl,
+                            builder: (_, __) => Text(
+                              'Index: ${_uvCtrl.value.toStringAsFixed(1)}',
+                              style: const TextStyle(
+                                color: Color(0xFF334466),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -392,9 +447,18 @@ class _WeatherCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
-          BoxShadow(color: Color(0x18000000), blurRadius: 8, offset: Offset(0, 2)),
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
+          ),
+          BoxShadow(
+            color: Color(0x10000000),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
         ],
       ),
       child: Column(

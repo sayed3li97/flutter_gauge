@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import '../core/gauge_controller.dart';
 import '../core/value_to_angle.dart';
 import '../styles/gauge_tokens.dart';
+import 'paint_utils.dart';
 
 /// Render engine for [DeltaGauge] — shows change from a baseline value.
 /// [controller.value] is the current value; delta = value - baseline.
@@ -145,7 +146,7 @@ class DeltaGaugeRenderBox extends RenderBox {
           style: _tokens.labelStyle.copyWith(color: barColor)),
       textDirection: TextDirection.ltr,
     )..layout();
-    tp.paint(canvas,
+    paintTextOnCanvas(canvas, tp,
         Offset(vx - tp.width / 2, cy - _tokens.trackStrokeWidth / 2 - tp.height - 4));
 
     canvas.restore();

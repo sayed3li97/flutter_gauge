@@ -149,6 +149,7 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
+                        color: const Color(0xFF00CC88).withValues(alpha: 0.1),
                         border: Border.all(color: const Color(0xFF00CC88)),
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -167,35 +168,67 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
 
                 const SizedBox(height: 16),
 
-                // ── 2×2 CPU/Mem/GPU arcs ───────────────────────────────
+                // ── 2×2 CPU/Mem/GPU arcs using Column of Rows ─────────
                 const Text('COMPUTE', style: labelStyle),
                 const SizedBox(height: 8),
-                SizedBox(
-                  height: 200,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    physics: const NeverScrollableScrollPhysics(),
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    children: [
-                      _ArcTile(
-                        ctrl: _cpu1Ctrl, label: 'CPU CORE 1',
-                        style: style, mode: mode,
-                      ),
-                      _ArcTile(
-                        ctrl: _cpu2Ctrl, label: 'CPU CORE 2',
-                        style: style, mode: mode,
-                      ),
-                      _ArcTile(
-                        ctrl: _memCtrl, label: 'MEMORY',
-                        style: style, mode: mode,
-                      ),
-                      _ArcTile(
-                        ctrl: _gpuCtrl, label: 'GPU',
-                        style: style, mode: mode,
-                      ),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 140,
+                            child: _ArcTile(
+                              ctrl: _cpu1Ctrl,
+                              label: 'CPU CORE 1',
+                              style: style,
+                              mode: mode,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: SizedBox(
+                            height: 140,
+                            child: _ArcTile(
+                              ctrl: _cpu2Ctrl,
+                              label: 'CPU CORE 2',
+                              style: style,
+                              mode: mode,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 140,
+                            child: _ArcTile(
+                              ctrl: _memCtrl,
+                              label: 'MEMORY',
+                              style: style,
+                              mode: mode,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: SizedBox(
+                            height: 140,
+                            child: _ArcTile(
+                              ctrl: _gpuCtrl,
+                              label: 'GPU',
+                              style: style,
+                              mode: mode,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 16),

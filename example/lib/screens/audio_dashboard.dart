@@ -87,7 +87,7 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const bg = Color(0xFF0D0D0D);
+    const bg = Color(0xFF0A0A0A);
     const style = ExecutiveGaugeStyle();
     const mode = GaugeMode.instrument;
     const headerStyle = TextStyle(
@@ -115,6 +115,7 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
+                color: Color(0xFF080808),
                 border: Border(bottom: BorderSide(color: Color(0xFF222222))),
               ),
               child: Row(
@@ -145,9 +146,9 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // ── Left: Channel strips ──────────────────────────────
+                  // ── Left 60%: Channel strips ──────────────────────────
                   Expanded(
-                    flex: 3,
+                    flex: 6,
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
@@ -163,15 +164,54 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 3),
                                     child: Column(
                                       children: [
+                                        // dBFS value at top
+                                        ListenableBuilder(
+                                          listenable: ctrl,
+                                          builder: (_, __) {
+                                            final dbfs = -60.0 + ctrl.value * 0.6;
+                                            return Text(
+                                              dbfs.toStringAsFixed(0),
+                                              style: TextStyle(
+                                                color: ctrl.value > 90
+                                                    ? const Color(0xFFCC3311)
+                                                    : accent,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(height: 4),
                                         Expanded(
-                                          child: LevelMeterGauge(
-                                            controller: ctrl,
-                                            min: 0,
-                                            max: 100,
-                                            channelCount: 1,
-                                            gap: 1,
-                                            style: style,
-                                            mode: mode,
+                                          child: Stack(
+                                            children: [
+                                              // Conditional border when hot
+                                              Positioned.fill(
+                                                child: ListenableBuilder(
+                                                  listenable: ctrl,
+                                                  builder: (_, __) => Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: ctrl.value > 90
+                                                            ? const Color(0xFFCC3311)
+                                                            : Colors.transparent,
+                                                        width: 1.5,
+                                                      ),
+                                                      borderRadius: BorderRadius.circular(2),
+                                                    ),
+                                                    child: LevelMeterGauge(
+                                                      controller: ctrl,
+                                                      min: 0,
+                                                      max: 100,
+                                                      channelCount: 1,
+                                                      gap: 1,
+                                                      style: style,
+                                                      mode: mode,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -200,9 +240,9 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
                   // Divider
                   Container(width: 1, color: const Color(0xFF222222)),
 
-                  // ── Right: Analysis instruments ────────────────────────
+                  // ── Right 40%: Analysis instruments ────────────────────
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -287,19 +327,32 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
 
                           const SizedBox(height: 12),
 
-                          // Pan position arc
+                          // Pan position arc with L/C/R overlay
                           const Text('PAN POSITION', style: headerStyle),
                           const SizedBox(height: 4),
                           Expanded(
-                            child: ArcGauge(
-                              controller: _panCtrl,
-                              min: -100,
-                              max: 100,
-                              startAngleDeg: 160,
-                              sweepAngleDeg: 220,
-                              centerLabel: 'PAN',
-                              style: style,
-                              mode: mode,
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: ListenableBuilder(
+                                    listenable: _panCtrl,
+                                    builder: (_, __) => ArcGauge(
+                                      controller: _panCtrl,
+                                      min: -100,
+                                      max: 100,
+                                      startAngleDeg: 160,
+                                      sweepAngleDeg: 220,
+                                      centerLabel: _panCtrl.value.abs() < 5
+                                          ? 'C'
+                                          : _panCtrl.value < 0
+                                              ? 'L${_panCtrl.value.abs().toStringAsFixed(0)}'
+                                              : 'R${_panCtrl.value.toStringAsFixed(0)}',
+                                      style: style,
+                                      mode: mode,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

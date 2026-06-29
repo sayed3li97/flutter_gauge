@@ -78,15 +78,34 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const bg = Color(0xFF111111);
+    const bg = Color(0xFF0D0D0D);
     const labelStyle = TextStyle(
-      color: Color(0xFFAAAAAA),
+      color: Color(0xFF888888),
       fontSize: 11,
       fontWeight: FontWeight.w600,
       letterSpacing: 1.5,
     );
     const style = ExecutiveGaugeStyle();
     const mode = GaugeMode.instrument;
+
+    // Center label styles — painted directly on canvas, always visible
+    const speedLabelStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 52,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -2,
+    );
+    const rpmLabelStyle = TextStyle(
+      color: Color(0xFFFFBB33),
+      fontSize: 36,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -1,
+    );
+    const fuelLabelStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+    );
 
     return Scaffold(
       backgroundColor: bg,
@@ -95,7 +114,11 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
           children: [
             // ── Top status bar ──────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: const BoxDecoration(
+                color: Color(0xFF111111),
+                border: Border(bottom: BorderSide(color: Color(0xFF2A2A2A))),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -107,8 +130,6 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
               ),
             ),
 
-            const Divider(color: Color(0xFF2A2A2A), height: 1),
-
             // ── Main gauge row: Tach | Speed | Fuel ─────────────────────────
             Expanded(
               flex: 5,
@@ -116,60 +137,65 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: Row(
                   children: [
-                    // Tachometer
+                    // Tachometer — RPM label painted on canvas
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: RadialGauge.tachometer(
+                            child: _LiveRadialGauge(
                               controller: _rpmCtrl,
-                              redlineRpm: 6500,
-                              maxRpm: 8000,
-                              style: style,
-                              mode: mode,
+                              builder: (value) => RadialGauge.tachometer(
+                                controller: _rpmCtrl,
+                                redlineRpm: 6500,
+                                maxRpm: 8000,
+                                showCenterLabel: true,
+                                centerLabel: '${(value / 1000).toStringAsFixed(1)}\n×1000 RPM',
+                                centerLabelStyle: rpmLabelStyle,
+                                style: style,
+                                mode: mode,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          const Text('RPM × 1000', style: labelStyle),
                         ],
                       ),
                     ),
 
-                    // Center speedometer — larger
+                    // Center speedometer — speed + unit painted on canvas
                     Expanded(
                       flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: RadialGauge.speedometer(
-                              controller: _speedCtrl,
-                              max: 240,
-                              style: style,
-                              mode: mode,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text('km/h', style: labelStyle),
-                        ],
+                      child: _LiveRadialGauge(
+                        controller: _speedCtrl,
+                        builder: (value) => RadialGauge.speedometer(
+                          controller: _speedCtrl,
+                          max: 240,
+                          showCenterLabel: true,
+                          centerLabel: '${value.toStringAsFixed(0)}\nkm/h',
+                          centerLabelStyle: speedLabelStyle,
+                          style: style,
+                          mode: mode,
+                        ),
                       ),
                     ),
 
-                    // Fuel gauge
+                    // Fuel gauge — percentage painted on canvas
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: RadialGauge.fuel(
+                            child: _LiveRadialGauge(
                               controller: _fuelCtrl,
-                              style: style,
-                              mode: mode,
+                              builder: (value) => RadialGauge.fuel(
+                                controller: _fuelCtrl,
+                                showCenterLabel: true,
+                                centerLabel: '${value.toStringAsFixed(0)}%\nFUEL',
+                                centerLabelStyle: fuelLabelStyle,
+                                style: style,
+                                mode: mode,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          const Text('FUEL', style: labelStyle),
                         ],
                       ),
                     ),
@@ -181,8 +207,9 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
             const Divider(color: Color(0xFF2A2A2A), height: 1),
 
             // ── Odometer ────────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              color: const Color(0xFF0A0A0A),
               child: Column(
                 children: [
                   OdometerGauge.mileage(
@@ -211,22 +238,32 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                       child: Column(
                         children: [
                           Expanded(
-                            child: RadialGauge(
+                            child: _LiveRadialGauge(
                               controller: _coolantCtrl,
-                              min: 0,
-                              max: 120,
-                              startAngleDeg: 150,
-                              sweepAngleDeg: 240,
-                              ranges: const [
-                                GaugeRange(min: 0, max: 40, color: Color(0xFF0077BB)),
-                                GaugeRange(min: 40, max: 95, color: Color(0xFF228833)),
-                                GaugeRange(min: 95, max: 120, color: Color(0xFFCC3311)),
-                              ],
-                              majorDivisions: 6,
-                              showLabels: true,
-                              showNeedle: true,
-                              style: style,
-                              mode: mode,
+                              builder: (value) => RadialGauge(
+                                controller: _coolantCtrl,
+                                min: 0,
+                                max: 120,
+                                startAngleDeg: 150,
+                                sweepAngleDeg: 240,
+                                ranges: const [
+                                  GaugeRange(min: 0, max: 40, color: Color(0xFF0077BB)),
+                                  GaugeRange(min: 40, max: 95, color: Color(0xFF228833)),
+                                  GaugeRange(min: 95, max: 120, color: Color(0xFFCC3311)),
+                                ],
+                                majorDivisions: 6,
+                                showLabels: true,
+                                showNeedle: true,
+                                showCenterLabel: true,
+                                centerLabel: '${value.toStringAsFixed(0)}°C',
+                                centerLabelStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                style: style,
+                                mode: mode,
+                              ),
                             ),
                           ),
                           const Text('COOLANT °C', style: labelStyle),
@@ -241,23 +278,33 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                       child: Column(
                         children: [
                           Expanded(
-                            child: RadialGauge(
+                            child: _LiveRadialGauge(
                               controller: _oilCtrl,
-                              min: 0,
-                              max: 6,
-                              startAngleDeg: 150,
-                              sweepAngleDeg: 240,
-                              ranges: const [
-                                GaugeRange(min: 0, max: 1, color: Color(0xFFCC3311)),
-                                GaugeRange(min: 1, max: 2, color: Color(0xFFEE7733)),
-                                GaugeRange(min: 2, max: 5, color: Color(0xFF228833)),
-                                GaugeRange(min: 5, max: 6, color: Color(0xFFEE7733)),
-                              ],
-                              majorDivisions: 6,
-                              showLabels: true,
-                              showNeedle: true,
-                              style: style,
-                              mode: mode,
+                              builder: (value) => RadialGauge(
+                                controller: _oilCtrl,
+                                min: 0,
+                                max: 6,
+                                startAngleDeg: 150,
+                                sweepAngleDeg: 240,
+                                ranges: const [
+                                  GaugeRange(min: 0, max: 1, color: Color(0xFFCC3311)),
+                                  GaugeRange(min: 1, max: 2, color: Color(0xFFEE7733)),
+                                  GaugeRange(min: 2, max: 5, color: Color(0xFF228833)),
+                                  GaugeRange(min: 5, max: 6, color: Color(0xFFEE7733)),
+                                ],
+                                majorDivisions: 6,
+                                showLabels: true,
+                                showNeedle: true,
+                                showCenterLabel: true,
+                                centerLabel: '${value.toStringAsFixed(1)} bar',
+                                centerLabelStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                style: style,
+                                mode: mode,
+                              ),
                             ),
                           ),
                           const Text('OIL PRESS bar', style: labelStyle),
@@ -275,6 +322,51 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
   }
 }
 
+// Rebuilds the RadialGauge widget when controller value changes, providing
+// the live value so it can be embedded in centerLabel without Stack/Align.
+class _LiveRadialGauge extends StatefulWidget {
+  final GaugeController controller;
+  final Widget Function(double value) builder;
+
+  const _LiveRadialGauge({
+    required this.controller,
+    required this.builder,
+  });
+
+  @override
+  State<_LiveRadialGauge> createState() => _LiveRadialGaugeState();
+}
+
+class _LiveRadialGaugeState extends State<_LiveRadialGauge> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onChanged);
+  }
+
+  void _onChanged() => setState(() {});
+
+  @override
+  void didUpdateWidget(_LiveRadialGauge oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onChanged);
+      widget.controller.addListener(_onChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(widget.controller.value);
+  }
+}
+
 // ── Helper widgets ──────────────────────────────────────────────────────────
 
 class _StatusItem extends StatelessWidget {
@@ -285,29 +377,49 @@ class _StatusItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 28,
-          height: 28,
-          child: StatusGauge(
-            controller: ctrl,
-            radius: 10,
-            style: const ExecutiveGaugeStyle(),
-            mode: GaugeMode.instrument,
+    return ListenableBuilder(
+      listenable: ctrl,
+      builder: (_, __) {
+        final val = ctrl.value;
+        final statusColor = val >= 2.0
+            ? const Color(0xFFCC3311)
+            : val >= 1.0
+                ? const Color(0xFFFFBB33)
+                : const Color(0xFF228833);
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: statusColor.withValues(alpha: 0.08),
+            border: Border.all(color: statusColor.withValues(alpha: 0.5), width: 1.0),
+            borderRadius: BorderRadius.circular(20),
           ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF777777),
-            fontSize: 9,
-            letterSpacing: 1.2,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 28,
+                height: 28,
+                child: StatusGauge(
+                  controller: ctrl,
+                  radius: 14,
+                  style: const ExecutiveGaugeStyle(),
+                  mode: GaugeMode.instrument,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -318,32 +430,36 @@ class _GearIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFFFBB33), width: 1.5),
-            borderRadius: BorderRadius.circular(4),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFBB33).withValues(alpha: 0.1),
+        border: Border.all(color: const Color(0xFFFFBB33), width: 1.5),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'GEAR',
+            style: TextStyle(
+              color: Color(0xFF886633),
+              fontSize: 11,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          alignment: Alignment.center,
-          child: Text(
+          const SizedBox(width: 8),
+          Text(
             gear,
             style: const TextStyle(
               color: Color(0xFFFFBB33),
-              fontSize: 16,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-        const SizedBox(height: 2),
-        const Text(
-          'GEAR',
-          style: TextStyle(color: Color(0xFF777777), fontSize: 9, letterSpacing: 1.2),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

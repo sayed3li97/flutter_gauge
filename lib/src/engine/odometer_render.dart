@@ -2,6 +2,7 @@ import 'package:flutter/rendering.dart';
 
 import '../core/gauge_controller.dart';
 import '../styles/gauge_tokens.dart';
+import 'paint_utils.dart';
 
 /// Render engine for [OdometerGauge] — a rolling digit display.
 class OdometerGaugeRenderBox extends RenderBox {
@@ -116,7 +117,7 @@ class OdometerGaugeRenderBox extends RenderBox {
         );
       }
 
-      tp.paint(canvas, Offset(x + (_digitW - tp.width) / 2, (size.height - _digitH) / 2));
+      paintTextOnCanvas(canvas, tp, Offset(x + (_digitW - tp.width) / 2, (size.height - _digitH) / 2));
       x += ch == '.' ? 10 : _digitW + 2;
     }
 
@@ -125,7 +126,7 @@ class OdometerGaugeRenderBox extends RenderBox {
         text: TextSpan(text: _unit, style: _tokens.labelStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      utp.paint(canvas, Offset(x + 4, size.height / 2 - utp.height / 2));
+      paintTextOnCanvas(canvas, utp, Offset(x + 4, size.height / 2 - utp.height / 2));
     }
 
     canvas.restore();

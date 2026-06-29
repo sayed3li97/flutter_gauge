@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
 import '../core/gauge_mode.dart';
+import '../core/gauge_range.dart';
 import '../engine/arc_render.dart';
 import '../styles/extensions/gauge_theme_extension.dart';
 import '../styles/gauge_style.dart';
@@ -18,6 +19,7 @@ class ArcGauge extends LeafRenderObjectWidget {
     this.sweepAngleDeg = 270,
     this.centerLabel,
     this.centerLabelStyle,
+    this.ranges = const [],
     this.style,
     this.mode,
   });
@@ -67,6 +69,7 @@ class ArcGauge extends LeafRenderObjectWidget {
   final double sweepAngleDeg;
   final String? centerLabel;
   final TextStyle? centerLabelStyle;
+  final List<GaugeRange> ranges;
   final GaugeStyle? style;
   final GaugeMode? mode;
 
@@ -88,6 +91,7 @@ class ArcGauge extends LeafRenderObjectWidget {
       sweepAngleDeg: sweepAngleDeg,
       centerLabel: centerLabel,
       centerLabelStyle: centerLabelStyle,
+      ranges: ranges,
     );
   }
 
@@ -96,6 +100,7 @@ class ArcGauge extends LeafRenderObjectWidget {
     renderObject
       ..tokens = _resolve(context)
       ..centerLabel = centerLabel
+      ..ranges = ranges
       ..min = min
       ..max = max;
   }

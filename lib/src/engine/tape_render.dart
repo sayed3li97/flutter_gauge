@@ -2,6 +2,7 @@ import 'package:flutter/rendering.dart';
 
 import '../core/gauge_controller.dart';
 import '../styles/gauge_tokens.dart';
+import 'paint_utils.dart';
 
 /// Render engine for [TapeGauge] — a scrolling tape/ribbon gauge (altimeter style).
 class TapeGaugeRenderBox extends RenderBox {
@@ -105,10 +106,10 @@ class TapeGaugeRenderBox extends RenderBox {
               text: TextSpan(text: _fmt(tick), style: _tokens.labelStyle),
               textDirection: TextDirection.ltr,
             )..layout();
-            tp.paint(
+            paintTextOnCanvas(
               canvas,
-              Offset(size.width - tStyle.length - tp.width - 4,
-                  y - tp.height / 2),
+              tp,
+              Offset(size.width - tStyle.length - tp.width - 4, y - tp.height / 2),
             );
           }
         }
@@ -145,8 +146,7 @@ class TapeGaugeRenderBox extends RenderBox {
               text: TextSpan(text: _fmt(tick), style: _tokens.labelStyle),
               textDirection: TextDirection.ltr,
             )..layout();
-            tp.paint(canvas,
-                Offset(x - tp.width / 2, tStyle.length + 2));
+            paintTextOnCanvas(canvas, tp, Offset(x - tp.width / 2, tStyle.length + 2));
           }
         }
         tick += _tickInterval;
@@ -176,16 +176,9 @@ class TapeGaugeRenderBox extends RenderBox {
         textDirection: TextDirection.ltr,
       )..layout();
       if (_vertical) {
-        tp.paint(
-          canvas,
-          Offset(4, size.height / 2 - tp.height / 2),
-        );
+        paintTextOnCanvas(canvas, tp, Offset(4, size.height / 2 - tp.height / 2));
       } else {
-        tp.paint(
-          canvas,
-          Offset(size.width / 2 - tp.width / 2,
-              size.height - tp.height - 4),
-        );
+        paintTextOnCanvas(canvas, tp, Offset(size.width / 2 - tp.width / 2, size.height - tp.height - 4));
       }
     }
 

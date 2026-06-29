@@ -33,6 +33,9 @@ class RadialGauge extends LeafRenderObjectWidget {
     this.showNeedle = true,
     this.interactive = false,
     this.onChanged,
+    this.showCenterLabel = false,
+    this.centerLabel,
+    this.centerLabelStyle,
     this.style,
     this.mode,
   });
@@ -44,6 +47,9 @@ class RadialGauge extends LeafRenderObjectWidget {
     Key? key,
     required GaugeController controller,
     double max = 200,
+    bool showCenterLabel = false,
+    String? centerLabel,
+    TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
   }) {
@@ -63,6 +69,9 @@ class RadialGauge extends LeafRenderObjectWidget {
         GaugeRange(min: max * 0.6, max: max * 0.8, color: const Color(0xFFEE7733)),
         GaugeRange(min: max * 0.8, max: max, color: const Color(0xFFCC3311)),
       ],
+      showCenterLabel: showCenterLabel,
+      centerLabel: centerLabel,
+      centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
     );
@@ -74,6 +83,9 @@ class RadialGauge extends LeafRenderObjectWidget {
     required GaugeController controller,
     double redlineRpm = 6500,
     double maxRpm = 8000,
+    bool showCenterLabel = false,
+    String? centerLabel,
+    TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
   }) {
@@ -87,6 +99,9 @@ class RadialGauge extends LeafRenderObjectWidget {
       ranges: [
         GaugeRange(min: redlineRpm, max: maxRpm, color: const Color(0xFFCC3311)),
       ],
+      showCenterLabel: showCenterLabel,
+      centerLabel: centerLabel,
+      centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
     );
@@ -96,6 +111,9 @@ class RadialGauge extends LeafRenderObjectWidget {
   factory RadialGauge.fuel({
     Key? key,
     required GaugeController controller,
+    bool showCenterLabel = false,
+    String? centerLabel,
+    TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
   }) {
@@ -111,6 +129,9 @@ class RadialGauge extends LeafRenderObjectWidget {
         const GaugeRange(min: 25, max: 50, color: Color(0xFFEE7733)),
         const GaugeRange(min: 50, max: 100, color: Color(0xFF0077BB)),
       ],
+      showCenterLabel: showCenterLabel,
+      centerLabel: centerLabel,
+      centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
     );
@@ -120,6 +141,9 @@ class RadialGauge extends LeafRenderObjectWidget {
   factory RadialGauge.compass({
     Key? key,
     required GaugeController controller,
+    bool showCenterLabel = false,
+    String? centerLabel,
+    TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
   }) {
@@ -133,6 +157,9 @@ class RadialGauge extends LeafRenderObjectWidget {
       majorDivisions: 8,
       minorDivisions: 3,
       showLabels: true,
+      showCenterLabel: showCenterLabel,
+      centerLabel: centerLabel,
+      centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
     );
@@ -152,6 +179,9 @@ class RadialGauge extends LeafRenderObjectWidget {
   final bool showNeedle;
   final bool interactive;
   final ValueChanged<double>? onChanged;
+  final bool showCenterLabel;
+  final String? centerLabel;
+  final TextStyle? centerLabelStyle;
   final GaugeStyle? style;
   final GaugeMode? mode;
 
@@ -178,6 +208,9 @@ class RadialGauge extends LeafRenderObjectWidget {
       showNeedle: showNeedle,
       interactive: interactive,
       onChanged: onChanged,
+      showCenterLabel: showCenterLabel,
+      centerLabel: centerLabel,
+      centerLabelStyle: centerLabelStyle,
     );
   }
 
@@ -195,6 +228,9 @@ class RadialGauge extends LeafRenderObjectWidget {
       ..showLabels = showLabels
       ..showNeedle = showNeedle
       ..interactive = interactive
-      ..onChanged = onChanged;
+      ..onChanged = onChanged
+      ..showCenterLabel = showCenterLabel
+      ..centerLabel = centerLabel
+      ..centerLabelStyle = centerLabelStyle;
   }
 }

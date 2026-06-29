@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import '../core/gauge_controller.dart';
 import '../core/value_to_angle.dart';
 import '../styles/gauge_tokens.dart';
+import 'paint_utils.dart';
 
 /// Render engine for [BulletGauge] — a Stephen Few-style bullet chart.
 class BulletGaugeRenderBox extends RenderBox {
@@ -152,7 +153,7 @@ class BulletGaugeRenderBox extends RenderBox {
         text: TextSpan(text: _label, style: _tokens.labelStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(canvas, Offset(4, size.height / 2 - tp.height / 2));
+      paintTextOnCanvas(canvas, tp, Offset(4, size.height / 2 - tp.height / 2));
     }
 
     canvas.restore();

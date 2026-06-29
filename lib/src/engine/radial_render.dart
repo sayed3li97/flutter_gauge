@@ -24,6 +24,9 @@ class RadialGaugeRenderBox extends RenderBox {
     required bool showNeedle,
     required bool interactive,
     required ValueChanged<double>? onChanged,
+    bool showCenterLabel = false,
+    String? centerLabel,
+    TextStyle? centerLabelStyle,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -36,7 +39,10 @@ class RadialGaugeRenderBox extends RenderBox {
         _showLabels = showLabels,
         _showNeedle = showNeedle,
         _interactive = interactive,
-        _onChanged = onChanged {
+        _onChanged = onChanged,
+        _showCenterLabel = showCenterLabel,
+        _centerLabel = centerLabel,
+        _centerLabelStyle = centerLabelStyle {
     _controller.addListener(_onValueChanged);
   }
 
@@ -53,6 +59,9 @@ class RadialGaugeRenderBox extends RenderBox {
   bool _showNeedle;
   bool _interactive;
   ValueChanged<double>? _onChanged;
+  bool _showCenterLabel;
+  String? _centerLabel;
+  TextStyle? _centerLabelStyle;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -128,6 +137,22 @@ class RadialGaugeRenderBox extends RenderBox {
 
   set onChanged(ValueChanged<double>? v) {
     _onChanged = v;
+  }
+
+  set showCenterLabel(bool v) {
+    if (_showCenterLabel == v) return;
+    _showCenterLabel = v;
+    markNeedsPaint();
+  }
+
+  set centerLabel(String? v) {
+    _centerLabel = v;
+    markNeedsPaint();
+  }
+
+  set centerLabelStyle(TextStyle? v) {
+    _centerLabelStyle = v;
+    markNeedsPaint();
   }
 
   @override
@@ -307,6 +332,29 @@ class RadialGaugeRenderBox extends RenderBox {
     // Needle
     if (_showNeedle) {
       _paintNeedle(canvas, center, radius, valueAngle);
+    }
+
+    // Center label — painted via PictureRecorder so text renders correctly in CanvasKit
+    if (_showCenterLabel) {
+      final labelText = _centerLabel ?? _formatLabel(_controller.value);
+      final tp = TextPainter(
+        text: TextSpan(
+          text: labelText,
+          style: _centerLabelStyle ??
+              _tokens.labelStyle.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final textRecorder = ui.PictureRecorder();
+      tp.paint(Canvas(textRecorder), Offset.zero);
+      final textPic = textRecorder.endRecording();
+      canvas.save();
+      canvas.translate(center.dx - tp.width / 2, center.dy - tp.height / 2);
+      canvas.drawPicture(textPic);
+      canvas.restore();
     }
 
     canvas.restore();

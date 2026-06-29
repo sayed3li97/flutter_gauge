@@ -85,7 +85,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const bg = Color(0xFF0A0A0F);
+    const bg = Color(0xFF080A12);
+    const cyan = Color(0xFF00CCFF);
     const labelStyle = TextStyle(
       color: Color(0xFF88AACC),
       fontSize: 10,
@@ -102,8 +103,9 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
           children: [
             // ── Title bar ──────────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: const BoxDecoration(
+                color: Color(0xFF060810),
                 border: Border(bottom: BorderSide(color: Color(0xFF1A2A3A))),
               ),
               child: Row(
@@ -112,8 +114,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                   const Text(
                     'PRIMARY FLIGHT DISPLAY',
                     style: TextStyle(
-                      color: Color(0xFF4499CC),
-                      fontSize: 12,
+                      color: Color(0xFF00CCFF),
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0,
                     ),
@@ -133,15 +135,16 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
             Expanded(
               child: Row(
                 children: [
-                  // Left: Airspeed tape
+                  // Left: Airspeed tape + digital readout
                   Container(
-                    width: 64,
-                    color: const Color(0xFF080810),
+                    width: 100,
+                    color: const Color(0xFF060810),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                     child: Column(
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(top: 6, bottom: 4),
-                          child: Text('SPD', style: labelStyle),
+                          padding: EdgeInsets.only(bottom: 4),
+                          child: Text('AIRSPEED', style: labelStyle),
                         ),
                         Expanded(
                           child: TapeGauge.airspeed(
@@ -150,9 +153,29 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                             mode: mode,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 4, top: 2),
-                          child: Text('kts', style: labelStyle),
+                        const SizedBox(height: 8),
+                        // Digital cyan readout box
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF001822),
+                            border: Border.all(color: cyan, width: 1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: ListenableBuilder(
+                            listenable: _airspeedCtrl,
+                            builder: (_, __) => Text(
+                              '${_airspeedCtrl.value.toStringAsFixed(0)} kts',
+                              style: const TextStyle(
+                                color: cyan,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -222,21 +245,30 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
 
                                 const SizedBox(width: 8),
 
-                                // VSI
+                                // VSI with live overlay
                                 Expanded(
                                   child: Column(
                                     children: [
                                       const Text('VSI fpm', style: labelStyle),
                                       Expanded(
-                                        child: ArcGauge(
-                                          controller: _vsiCtrl,
-                                          min: -2000,
-                                          max: 2000,
-                                          startAngleDeg: 150,
-                                          sweepAngleDeg: 240,
-                                          centerLabel: 'VSI',
-                                          style: style,
-                                          mode: mode,
+                                        child: Stack(
+                                          children: [
+                                            Positioned.fill(
+                                              child: ListenableBuilder(
+                                                listenable: _vsiCtrl,
+                                                builder: (_, __) => ArcGauge(
+                                                  controller: _vsiCtrl,
+                                                  min: -2000,
+                                                  max: 2000,
+                                                  startAngleDeg: 150,
+                                                  sweepAngleDeg: 240,
+                                                  centerLabel: '${_vsiCtrl.value > 0 ? '+' : ''}${_vsiCtrl.value.toStringAsFixed(0)}',
+                                                  style: style,
+                                                  mode: mode,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -245,21 +277,24 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
 
                                 const SizedBox(width: 8),
 
-                                // G-Force
+                                // G-Force with live overlay
                                 Expanded(
                                   child: Column(
                                     children: [
                                       const Text('G-FORCE', style: labelStyle),
                                       Expanded(
-                                        child: ArcGauge(
-                                          controller: _gforceCtrl,
-                                          min: 0,
-                                          max: 5,
-                                          startAngleDeg: 150,
-                                          sweepAngleDeg: 240,
-                                          centerLabel: 'G',
-                                          style: style,
-                                          mode: mode,
+                                        child: ListenableBuilder(
+                                          listenable: _gforceCtrl,
+                                          builder: (_, __) => ArcGauge(
+                                            controller: _gforceCtrl,
+                                            min: 0,
+                                            max: 5,
+                                            startAngleDeg: 150,
+                                            sweepAngleDeg: 240,
+                                            centerLabel: '${_gforceCtrl.value.toStringAsFixed(1)} G',
+                                            style: style,
+                                            mode: mode,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -273,15 +308,16 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                     ),
                   ),
 
-                  // Right: Altimeter tape
+                  // Right: Altimeter tape + digital readout
                   Container(
-                    width: 64,
-                    color: const Color(0xFF080810),
+                    width: 100,
+                    color: const Color(0xFF060810),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                     child: Column(
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(top: 6, bottom: 4),
-                          child: Text('ALT', style: labelStyle),
+                          padding: EdgeInsets.only(bottom: 4),
+                          child: Text('ALTITUDE', style: labelStyle),
                         ),
                         Expanded(
                           child: TapeGauge.altimeter(
@@ -290,9 +326,29 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                             mode: mode,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 4, top: 2),
-                          child: Text('ft', style: labelStyle),
+                        const SizedBox(height: 8),
+                        // Digital cyan readout box
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF001822),
+                            border: Border.all(color: cyan, width: 1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: ListenableBuilder(
+                            listenable: _altCtrl,
+                            builder: (_, __) => Text(
+                              '${_altCtrl.value.toStringAsFixed(0)} ft',
+                              style: const TextStyle(
+                                color: cyan,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -317,16 +373,16 @@ class _PfdChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: active ? const Color(0xFF1A3A2A) : const Color(0xFF1A1A1A),
+        color: active ? const Color(0xFF001A2A) : const Color(0xFF0D0D0D),
         border: Border.all(
-          color: active ? const Color(0xFF44BB66) : const Color(0xFF333333),
+          color: active ? const Color(0xFF00CCFF) : const Color(0xFF222222),
         ),
         borderRadius: BorderRadius.circular(3),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: active ? const Color(0xFF44BB66) : const Color(0xFF555555),
+          color: active ? const Color(0xFF00CCFF) : const Color(0xFF444444),
           fontSize: 10,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.0,

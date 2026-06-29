@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 
 import '../core/gauge_controller.dart';
+import '../core/gauge_range.dart';
 import '../core/value_to_angle.dart';
 import '../styles/gauge_tokens.dart';
 
@@ -18,6 +19,7 @@ class ArcGaugeRenderBox extends RenderBox {
     required double sweepAngleDeg,
     required String? centerLabel,
     required TextStyle? centerLabelStyle,
+    List<GaugeRange> ranges = const [],
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -25,7 +27,8 @@ class ArcGaugeRenderBox extends RenderBox {
         _startAngleDeg = startAngleDeg,
         _sweepAngleDeg = sweepAngleDeg,
         _centerLabel = centerLabel,
-        _centerLabelStyle = centerLabelStyle {
+        _centerLabelStyle = centerLabelStyle,
+        _ranges = ranges {
     _controller.addListener(_onValueChanged);
   }
 
@@ -37,6 +40,7 @@ class ArcGaugeRenderBox extends RenderBox {
   final double _sweepAngleDeg;
   String? _centerLabel;
   final TextStyle? _centerLabelStyle;
+  List<GaugeRange> _ranges;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -55,6 +59,12 @@ class ArcGaugeRenderBox extends RenderBox {
 
   set centerLabel(String? v) {
     _centerLabel = v;
+    markNeedsPaint();
+  }
+
+  set ranges(List<GaugeRange> v) {
+    _ranges = v;
+    _staticPicture = null;
     markNeedsPaint();
   }
 
@@ -98,6 +108,24 @@ class ArcGaugeRenderBox extends RenderBox {
       false,
       trackPaint,
     );
+
+    // Colored ranges over track
+    for (final range in _ranges) {
+      final rStart = valueToAngle(range.min, _min, _max, startRad, sweepRad);
+      final rSweep = valueToAngle(range.max, _min, _max, startRad, sweepRad) - rStart;
+      final rangePaint = Paint()
+        ..color = range.color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = _tokens.trackStrokeWidth
+        ..strokeCap = StrokeCap.butt;
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        rStart,
+        rSweep,
+        false,
+        rangePaint,
+      );
+    }
 
     _staticPicture = recorder.endRecording();
     _staticSize = size;
@@ -152,9 +180,8 @@ class ArcGaugeRenderBox extends RenderBox {
       );
     }
 
-    // Center label
-    final labelText = _centerLabel ??
-        _fmt(_controller.value);
+    // Center label — painted via PictureRecorder so text renders correctly in CanvasKit
+    final labelText = _centerLabel ?? _fmt(_controller.value);
     final tp = TextPainter(
       text: TextSpan(
         text: labelText,
@@ -163,11 +190,13 @@ class ArcGaugeRenderBox extends RenderBox {
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    tp.paint(
-      canvas,
-      Offset(
-          center.dx - tp.width / 2, center.dy - tp.height / 2),
-    );
+    final textRecorder = ui.PictureRecorder();
+    tp.paint(Canvas(textRecorder), Offset.zero);
+    final textPic = textRecorder.endRecording();
+    canvas.save();
+    canvas.translate(center.dx - tp.width / 2, center.dy - tp.height / 2);
+    canvas.drawPicture(textPic);
+    canvas.restore();
 
     canvas.restore();
   }

@@ -2,6 +2,7 @@ import 'package:flutter/rendering.dart';
 
 import '../core/gauge_controller.dart';
 import '../styles/gauge_tokens.dart';
+import 'paint_utils.dart';
 
 /// Render engine for [StatusGauge] — a simple colored indicator dot or ring.
 /// [controller.value]: 0 = normal, 1 = warning, 2 = danger.
@@ -94,7 +95,7 @@ class StatusGaugeRenderBox extends RenderBox {
         text: TextSpan(text: _label, style: _tokens.labelStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      tp.paint(canvas, Offset(_radius * 2 + 8, _radius - tp.height / 2));
+      paintTextOnCanvas(canvas, tp, Offset(_radius * 2 + 8, _radius - tp.height / 2));
     }
 
     canvas.restore();
