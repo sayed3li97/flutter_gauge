@@ -63,8 +63,8 @@ void main() {
         MaterialApp(
           theme: ThemeData(
             extensions: [
-              GaugeThemeExtension(
-                style: const ExecutiveGaugeStyle(),
+              const GaugeThemeExtension(
+                style: ExecutiveGaugeStyle(),
                 defaultMode: GaugeMode.instrument,
               ),
             ],

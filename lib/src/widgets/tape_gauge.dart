@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
 import '../core/gauge_mode.dart';

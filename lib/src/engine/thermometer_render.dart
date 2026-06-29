@@ -26,12 +26,12 @@ class ThermometerGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
-  double _minCelsius;
-  double _maxCelsius;
+  final double _minCelsius;
+  final double _maxCelsius;
   TemperatureScale _scale;
-  bool _showScale;
+  final bool _showScale;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -68,7 +68,7 @@ class ThermometerGaugeRenderBox extends RenderBox {
     final canvas = Canvas(recorder);
 
     final cx = size.width / 2;
-    final stemTop = 8.0;
+    const stemTop = 8.0;
     final stemBottom = size.height - _bulbRadius * 2 - 4;
     final stemHeight = stemBottom - stemTop;
 
@@ -131,7 +131,7 @@ class ThermometerGaugeRenderBox extends RenderBox {
     canvas.drawPicture(_staticPicture!);
 
     final cx = size.width / 2;
-    final stemTop = 8.0;
+    const stemTop = 8.0;
     final stemBottom = size.height - _bulbRadius * 2 - 4;
     final stemHeight = stemBottom - stemTop;
 

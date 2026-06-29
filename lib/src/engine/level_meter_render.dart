@@ -22,12 +22,12 @@ class LevelMeterGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
   int _channelCount;
-  double _gap;
+  final double _gap;
 
   @override
   bool get isRepaintBoundary => true;

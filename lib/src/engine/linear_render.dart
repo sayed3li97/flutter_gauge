@@ -33,7 +33,7 @@ class LinearGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
@@ -81,6 +81,27 @@ class LinearGaugeRenderBox extends RenderBox {
   set orientation(LinearGaugeOrientation v) {
     if (_orientation == v) return;
     _orientation = v;
+    _staticPicture = null;
+    markNeedsPaint();
+  }
+
+  set majorDivisions(int v) {
+    if (_majorDivisions == v) return;
+    _majorDivisions = v;
+    _staticPicture = null;
+    markNeedsPaint();
+  }
+
+  set showLabels(bool v) {
+    if (_showLabels == v) return;
+    _showLabels = v;
+    _staticPicture = null;
+    markNeedsPaint();
+  }
+
+  set showTicks(bool v) {
+    if (_showTicks == v) return;
+    _showTicks = v;
     _staticPicture = null;
     markNeedsPaint();
   }

@@ -19,8 +19,8 @@ class HorizonGaugeRenderBox extends RenderBox {
     _rollController.addListener(_onValueChanged);
   }
 
-  GaugeController _pitchController;
-  GaugeController _rollController;
+  final GaugeController _pitchController;
+  final GaugeController _rollController;
   HorizonGaugeTokens _tokens;
 
   @override

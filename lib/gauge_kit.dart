@@ -4,7 +4,7 @@
 /// ```dart
 /// import 'package:gauge_kit/gauge_kit.dart';
 /// ```
-library gauge_kit;
+library;
 
 // Core
 export 'src/core/gauge_controller.dart';

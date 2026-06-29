@@ -25,12 +25,12 @@ class DeltaGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _baseline;
   double _min;
   double _max;
-  String? _unit;
+  final String? _unit;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;

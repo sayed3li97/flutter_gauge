@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
 import '../core/gauge_mode.dart';
@@ -107,9 +107,9 @@ class RadialGauge extends LeafRenderObjectWidget {
       majorDivisions: 4,
       minorDivisions: 0,
       ranges: [
-        GaugeRange(min: 0, max: 25, color: const Color(0xFFCC3311)),
-        GaugeRange(min: 25, max: 50, color: const Color(0xFFEE7733)),
-        GaugeRange(min: 50, max: 100, color: const Color(0xFF0077BB)),
+        const GaugeRange(min: 0, max: 25, color: Color(0xFFCC3311)),
+        const GaugeRange(min: 25, max: 50, color: Color(0xFFEE7733)),
+        const GaugeRange(min: 50, max: 100, color: Color(0xFF0077BB)),
       ],
       style: style,
       mode: mode,

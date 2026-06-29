@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:flutter/painting.dart';
 
 import '../core/gauge_tick_style.dart';

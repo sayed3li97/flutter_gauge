@@ -19,7 +19,7 @@ class OdometerGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   int _digitCount;
   int _decimalDigits;
@@ -86,7 +86,7 @@ class OdometerGaugeRenderBox extends RenderBox {
       final parts = formatted.split('.');
       final intPart = parts[0].replaceAll('-', '');
       final decPart = parts.length > 1 ? parts[1] : '0' * _decimalDigits;
-      display = intPart.padLeft(totalInt, '0') + '.' + decPart;
+      display = '${intPart.padLeft(totalInt, '0')}.$decPart';
     } else {
       display = formatted.replaceAll('-', '').padLeft(totalInt, '0');
     }

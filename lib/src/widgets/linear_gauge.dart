@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
 import '../core/gauge_mode.dart';
@@ -60,7 +60,7 @@ class LinearGauge extends LeafRenderObjectWidget {
       max: 100,
       majorDivisions: 10,
       ranges: [
-        GaugeRange(min: 80, max: 100, color: const Color(0xFFEE7733)),
+        const GaugeRange(min: 80, max: 100, color: Color(0xFFEE7733)),
       ],
       style: style,
       mode: mode,

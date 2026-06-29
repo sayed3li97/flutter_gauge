@@ -18,7 +18,7 @@ class StatusGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _radius;
   String? _label;

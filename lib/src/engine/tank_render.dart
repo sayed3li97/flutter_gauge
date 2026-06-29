@@ -12,22 +12,20 @@ class TankGaugeRenderBox extends RenderBox {
     required double min,
     required double max,
     required bool vertical,
-    required bool showWave,
+    bool showWave = false,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
         _max = max,
-        _vertical = vertical,
-        _showWave = showWave {
+        _vertical = vertical {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
-  bool _vertical;
-  bool _showWave;
+  final bool _vertical;
 
   @override
   bool get isRepaintBoundary => true;

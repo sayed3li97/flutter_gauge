@@ -29,14 +29,14 @@ class ArcGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
-  double _startAngleDeg;
-  double _sweepAngleDeg;
+  final double _startAngleDeg;
+  final double _sweepAngleDeg;
   String? _centerLabel;
-  TextStyle? _centerLabelStyle;
+  final TextStyle? _centerLabelStyle;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;

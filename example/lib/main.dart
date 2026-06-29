@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gauge_kit/gauge_kit.dart';
 
 import 'screens/radial_demo.dart';
 import 'screens/linear_demo.dart';

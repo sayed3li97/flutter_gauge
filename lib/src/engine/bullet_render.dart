@@ -28,14 +28,14 @@ class BulletGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
   double? _targetValue;
-  double _poorThreshold;
-  double _satisfactoryThreshold;
-  String? _label;
+  final double _poorThreshold;
+  final double _satisfactoryThreshold;
+  final String? _label;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;

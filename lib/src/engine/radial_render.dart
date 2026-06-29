@@ -40,12 +40,12 @@ class RadialGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
-  double _startAngleDeg;
-  double _sweepAngleDeg;
+  final double _startAngleDeg;
+  final double _sweepAngleDeg;
   List<GaugeRange> _ranges;
   int _majorDivisions;
   int _minorDivisions;

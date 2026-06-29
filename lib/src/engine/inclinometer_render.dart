@@ -19,7 +19,7 @@ class InclinometerGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _maxAngle;
 
@@ -65,7 +65,6 @@ class InclinometerGaugeRenderBox extends RenderBox {
 
     // Center mark
     final cx = size.width / 2;
-    final cy = size.height / 2;
     canvas.drawLine(
       Offset(cx, tubeRect.top + 4),
       Offset(cx, tubeRect.bottom - 4),

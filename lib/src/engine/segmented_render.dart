@@ -24,13 +24,13 @@ class SegmentedGaugeRenderBox extends RenderBox {
     _controller.addListener(_onValueChanged);
   }
 
-  GaugeController _controller;
+  final GaugeController _controller;
   GaugeTokens _tokens;
   double _min;
   double _max;
   int _segmentCount;
-  bool _horizontal;
-  double _gap;
+  final bool _horizontal;
+  final double _gap;
 
   @override
   bool get isRepaintBoundary => true;
@@ -46,7 +46,6 @@ class SegmentedGaugeRenderBox extends RenderBox {
   set segmentCount(int v) {
     if (_segmentCount == v) return;
     _segmentCount = v;
-    _staticPicture = null;
     markNeedsPaint();
   }
 
