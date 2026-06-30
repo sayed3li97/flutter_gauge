@@ -6,6 +6,7 @@ import 'screens/weather_dashboard.dart';
 import 'screens/audio_dashboard.dart';
 import 'screens/server_dashboard.dart';
 import 'screens/submarine_dashboard.dart';
+import 'screens/data_science_dashboard.dart';
 
 void main() {
   runApp(const GaugeKitExampleApp());
@@ -45,6 +46,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     (icon: Icons.equalizer, label: 'Audio'),
     (icon: Icons.dns, label: 'Server'),
     (icon: Icons.waves, label: 'Sub'),
+    (icon: Icons.analytics, label: 'ML'),
   ];
 
   @override
@@ -59,6 +61,7 @@ class _HomeScreenState extends State<_HomeScreen> {
           AudioDashboardScreen(),
           ServerDashboardScreen(),
           SubmarineDashboardScreen(),
+          DataScienceDashboardScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
