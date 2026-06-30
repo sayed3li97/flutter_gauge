@@ -61,7 +61,8 @@ class HorizonGaugeRenderBox extends RenderBox {
     final r = size.shortestSide / 2;
 
     // Clip to circle
-    canvas.clipPath(Path()..addOval(Rect.fromCircle(center: center, radius: r)));
+    canvas
+        .clipPath(Path()..addOval(Rect.fromCircle(center: center, radius: r)));
 
     // Roll rotation
     final roll = _rollController.value * math.pi / 180;

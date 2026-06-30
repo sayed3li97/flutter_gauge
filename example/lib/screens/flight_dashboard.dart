@@ -139,7 +139,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                   Container(
                     width: 100,
                     color: const Color(0xFF060810),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                     child: Column(
                       children: [
                         const Padding(
@@ -157,7 +158,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                         // Digital cyan readout box
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xFF001822),
                             border: Border.all(color: cyan, width: 1),
@@ -203,7 +205,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                         Expanded(
                           flex: 2,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 4),
                             child: Column(
                               children: [
                                 const Text('HDG', style: labelStyle),
@@ -223,7 +226,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                         Expanded(
                           flex: 2,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             child: Row(
                               children: [
                                 // Inclinometer
@@ -262,7 +266,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                                                   max: 2000,
                                                   startAngleDeg: 150,
                                                   sweepAngleDeg: 240,
-                                                  centerLabel: '${_vsiCtrl.value > 0 ? '+' : ''}${_vsiCtrl.value.toStringAsFixed(0)}',
+                                                  centerLabel:
+                                                      '${_vsiCtrl.value > 0 ? '+' : ''}${_vsiCtrl.value.toStringAsFixed(0)}',
                                                   style: style,
                                                   mode: mode,
                                                 ),
@@ -291,7 +296,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                                             max: 5,
                                             startAngleDeg: 150,
                                             sweepAngleDeg: 240,
-                                            centerLabel: '${_gforceCtrl.value.toStringAsFixed(1)} G',
+                                            centerLabel:
+                                                '${_gforceCtrl.value.toStringAsFixed(1)} G',
                                             style: style,
                                             mode: mode,
                                           ),
@@ -312,7 +318,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                   Container(
                     width: 100,
                     color: const Color(0xFF060810),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                     child: Column(
                       children: [
                         const Padding(
@@ -330,7 +337,8 @@ class _FlightDashboardScreenState extends State<FlightDashboardScreen> {
                         // Digital cyan readout box
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xFF001822),
                             border: Border.all(color: cyan, width: 1),

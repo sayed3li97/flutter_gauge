@@ -100,7 +100,8 @@ class LevelMeterGaugeRenderBox extends RenderBox {
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
 
-    final channelWidth = (size.width - _gap * (_channelCount - 1)) / _channelCount;
+    final channelWidth =
+        (size.width - _gap * (_channelCount - 1)) / _channelCount;
     final frac = valueToFraction(_controller.value, _min, _max);
 
     for (var ch = 0; ch < _channelCount; ch++) {

@@ -57,7 +57,8 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
       _odomCtrl.value += speed / 7200.0;
 
       // Update oil warning if pressure drops
-      _oilStatusCtrl.value = _oilCtrl.value < 1.5 ? 2.0 : (_oilCtrl.value < 2.0 ? 1.0 : 0.0);
+      _oilStatusCtrl.value =
+          _oilCtrl.value < 1.5 ? 2.0 : (_oilCtrl.value < 2.0 ? 1.0 : 0.0);
     });
   }
 
@@ -150,7 +151,8 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                                 redlineRpm: 6500,
                                 maxRpm: 8000,
                                 showCenterLabel: true,
-                                centerLabel: '${(value / 1000).toStringAsFixed(1)}\n×1000 RPM',
+                                centerLabel:
+                                    '${(value / 1000).toStringAsFixed(1)}\n×1000 RPM',
                                 centerLabelStyle: rpmLabelStyle,
                                 style: style,
                                 mode: mode,
@@ -189,7 +191,8 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                               builder: (value) => RadialGauge.fuel(
                                 controller: _fuelCtrl,
                                 showCenterLabel: true,
-                                centerLabel: '${value.toStringAsFixed(0)}%\nFUEL',
+                                centerLabel:
+                                    '${value.toStringAsFixed(0)}%\nFUEL',
                                 centerLabelStyle: fuelLabelStyle,
                                 style: style,
                                 mode: mode,
@@ -230,7 +233,8 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     // Coolant Temp
@@ -247,9 +251,18 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                                 startAngleDeg: 150,
                                 sweepAngleDeg: 240,
                                 ranges: const [
-                                  GaugeRange(min: 0, max: 40, color: Color(0xFF0077BB)),
-                                  GaugeRange(min: 40, max: 95, color: Color(0xFF228833)),
-                                  GaugeRange(min: 95, max: 120, color: Color(0xFFCC3311)),
+                                  GaugeRange(
+                                      min: 0,
+                                      max: 40,
+                                      color: Color(0xFF0077BB)),
+                                  GaugeRange(
+                                      min: 40,
+                                      max: 95,
+                                      color: Color(0xFF228833)),
+                                  GaugeRange(
+                                      min: 95,
+                                      max: 120,
+                                      color: Color(0xFFCC3311)),
                                 ],
                                 majorDivisions: 6,
                                 showLabels: true,
@@ -287,10 +300,14 @@ class _CarDashboardScreenState extends State<CarDashboardScreen> {
                                 startAngleDeg: 150,
                                 sweepAngleDeg: 240,
                                 ranges: const [
-                                  GaugeRange(min: 0, max: 1, color: Color(0xFFCC3311)),
-                                  GaugeRange(min: 1, max: 2, color: Color(0xFFEE7733)),
-                                  GaugeRange(min: 2, max: 5, color: Color(0xFF228833)),
-                                  GaugeRange(min: 5, max: 6, color: Color(0xFFEE7733)),
+                                  GaugeRange(
+                                      min: 0, max: 1, color: Color(0xFFCC3311)),
+                                  GaugeRange(
+                                      min: 1, max: 2, color: Color(0xFFEE7733)),
+                                  GaugeRange(
+                                      min: 2, max: 5, color: Color(0xFF228833)),
+                                  GaugeRange(
+                                      min: 5, max: 6, color: Color(0xFFEE7733)),
                                 ],
                                 majorDivisions: 6,
                                 showLabels: true,
@@ -390,7 +407,8 @@ class _StatusItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: statusColor.withValues(alpha: 0.08),
-            border: Border.all(color: statusColor.withValues(alpha: 0.5), width: 1.0),
+            border: Border.all(
+                color: statusColor.withValues(alpha: 0.5), width: 1.0),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(

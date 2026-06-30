@@ -129,7 +129,8 @@ class TapeGaugeRenderBox extends RenderBox {
             paintTextOnCanvas(
               canvas,
               tp,
-              Offset(size.width - tStyle.length - tp.width - 4, y - tp.height / 2),
+              Offset(
+                  size.width - tStyle.length - tp.width - 4, y - tp.height / 2),
             );
           }
         }
@@ -166,7 +167,8 @@ class TapeGaugeRenderBox extends RenderBox {
               text: TextSpan(text: _fmt(tick), style: _tokens.labelStyle),
               textDirection: TextDirection.ltr,
             )..layout();
-            paintTextOnCanvas(canvas, tp, Offset(x - tp.width / 2, tStyle.length + 2));
+            paintTextOnCanvas(
+                canvas, tp, Offset(x - tp.width / 2, tStyle.length + 2));
           }
         }
         tick += _tickInterval;
@@ -196,9 +198,11 @@ class TapeGaugeRenderBox extends RenderBox {
         textDirection: TextDirection.ltr,
       )..layout();
       if (_vertical) {
-        paintTextOnCanvas(canvas, tp, Offset(4, size.height / 2 - tp.height / 2));
+        paintTextOnCanvas(
+            canvas, tp, Offset(4, size.height / 2 - tp.height / 2));
       } else {
-        paintTextOnCanvas(canvas, tp, Offset(size.width / 2 - tp.width / 2, size.height - tp.height - 4));
+        paintTextOnCanvas(canvas, tp,
+            Offset(size.width / 2 - tp.width / 2, size.height - tp.height - 4));
       }
     }
 

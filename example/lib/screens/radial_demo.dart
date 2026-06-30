@@ -44,25 +44,29 @@ class _RadialDemoScreenState extends State<RadialDemoScreen>
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text('Speedometer', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Speedometer',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 200,
               child: RadialGauge.speedometer(controller: _speedCtrl, max: 180),
             ),
             const SizedBox(height: 16),
-            const Text('Tachometer', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Tachometer',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 200,
               child: RadialGauge.tachometer(controller: _rpmCtrl),
             ),
             const SizedBox(height: 16),
-            const Text('Fuel Level', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Fuel Level',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 200,
               child: RadialGauge.fuel(controller: _fuelCtrl),
             ),
             const SizedBox(height: 16),
-            const Text('Compass', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Compass',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: 200,
               child: RadialGauge.compass(

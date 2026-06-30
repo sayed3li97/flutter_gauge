@@ -108,7 +108,8 @@ class ThermometerGaugeRenderBox extends RenderBox {
 
     // Bulb outline
     final bulbCenter = Offset(cx, size.height - _bulbRadius - 2);
-    canvas.drawCircle(bulbCenter, _bulbRadius, Paint()..color = _tokens.trackColor);
+    canvas.drawCircle(
+        bulbCenter, _bulbRadius, Paint()..color = _tokens.trackColor);
 
     // Scale labels
     if (_showScale) {

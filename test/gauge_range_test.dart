@@ -23,7 +23,8 @@ void main() {
     });
 
     test('label can be set', () {
-      const r = GaugeRange(min: 0, max: 50, color: Color(0xFFEE7733), label: 'Low');
+      const r =
+          GaugeRange(min: 0, max: 50, color: Color(0xFFEE7733), label: 'Low');
       expect(r.label, 'Low');
     });
   });

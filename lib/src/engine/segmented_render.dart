@@ -115,8 +115,7 @@ class SegmentedGaugeRenderBox extends RenderBox {
         final x = i * (segW + _gap);
         final segFrac = (i + 1) / _segmentCount;
         final active = i < litCount;
-        final color =
-            active ? _colorForFraction(segFrac) : _tokens.trackColor;
+        final color = active ? _colorForFraction(segFrac) : _tokens.trackColor;
         canvas.drawRRect(
           RRect.fromRectAndRadius(Rect.fromLTWH(x, 0, segW, segH), rr),
           Paint()..color = color,
@@ -131,8 +130,7 @@ class SegmentedGaugeRenderBox extends RenderBox {
         final y = i * (segH + _gap);
         final segFrac = (idx + 1) / _segmentCount;
         final active = idx < litCount;
-        final color =
-            active ? _colorForFraction(segFrac) : _tokens.trackColor;
+        final color = active ? _colorForFraction(segFrac) : _tokens.trackColor;
         canvas.drawRRect(
           RRect.fromRectAndRadius(Rect.fromLTWH(0, y, segW, segH), rr),
           Paint()..color = color,

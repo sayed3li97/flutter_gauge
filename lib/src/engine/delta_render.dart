@@ -154,12 +154,14 @@ class DeltaGaugeRenderBox extends RenderBox {
     final label = '$sign${_fmt(delta)}${_unit != null ? ' $_unit' : ''}';
     final tp = TextPainter(
       text: TextSpan(
-          text: label,
-          style: _tokens.labelStyle.copyWith(color: barColor)),
+          text: label, style: _tokens.labelStyle.copyWith(color: barColor)),
       textDirection: TextDirection.ltr,
     )..layout();
-    paintTextOnCanvas(canvas, tp,
-        Offset(vx - tp.width / 2, cy - _tokens.trackStrokeWidth / 2 - tp.height - 4));
+    paintTextOnCanvas(
+        canvas,
+        tp,
+        Offset(vx - tp.width / 2,
+            cy - _tokens.trackStrokeWidth / 2 - tp.height - 4));
 
     canvas.restore();
   }
@@ -176,7 +178,8 @@ class DeltaGaugeRenderBox extends RenderBox {
     final sign = delta >= 0 ? '+' : '';
     config
       ..label = 'Delta gauge'
-      ..value = '$sign${delta.toStringAsFixed(1)}${_unit != null ? " $_unit" : ""}'
+      ..value =
+          '$sign${delta.toStringAsFixed(1)}${_unit != null ? " $_unit" : ""}'
       ..textDirection = TextDirection.ltr;
   }
 

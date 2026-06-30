@@ -71,7 +71,8 @@ class GaugeController extends ChangeNotifier {
           onAnimationEnd?.call();
         }
       }
-    })..start();
+    })
+      ..start();
     return completer.future;
   }
 

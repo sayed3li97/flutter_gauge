@@ -30,8 +30,11 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
       _phase += 0.09;
 
       _tempCtrl.value = (22.0 + 5.0 * sin(_phase * 0.3)).clamp(-10.0, 45.0);
-      _windCtrl.value = (18.0 + 12.0 * sin(_phase * 0.7) + 5.0 * sin(_phase * 1.8)).clamp(0.0, 120.0);
-      _pressCtrl.value = (1013.0 + 8.0 * sin(_phase * 0.15)).clamp(950.0, 1050.0);
+      _windCtrl.value =
+          (18.0 + 12.0 * sin(_phase * 0.7) + 5.0 * sin(_phase * 1.8))
+              .clamp(0.0, 120.0);
+      _pressCtrl.value =
+          (1013.0 + 8.0 * sin(_phase * 0.15)).clamp(950.0, 1050.0);
       _humidCtrl.value = (64.0 + 10.0 * sin(_phase * 0.4)).clamp(0.0, 100.0);
       _uvCtrl.value = (6.0 + 2.0 * sin(_phase * 0.5)).clamp(0.0, 11.0);
       _rainCtrl.value = (34.0 + 8.0 * sin(_phase * 0.25)).clamp(0.0, 100.0);
@@ -109,7 +112,8 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: const Color(0xFF2255AA),
                         borderRadius: BorderRadius.circular(8),
@@ -127,7 +131,10 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                           SizedBox(width: 6),
                           Text(
                             'LIVE',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
                           ),
                         ],
                       ),
@@ -177,9 +184,15 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text('Outdoor', style: TextStyle(color: Color(0xFF888888), fontSize: 11)),
+                                const Text('Outdoor',
+                                    style: TextStyle(
+                                        color: Color(0xFF888888),
+                                        fontSize: 11)),
                                 const SizedBox(height: 16),
-                                const Text('Feels like', style: TextStyle(color: Color(0xFF888888), fontSize: 11)),
+                                const Text('Feels like',
+                                    style: TextStyle(
+                                        color: Color(0xFF888888),
+                                        fontSize: 11)),
                                 ListenableBuilder(
                                   listenable: _tempCtrl,
                                   builder: (_, __) => Text(
@@ -218,10 +231,22 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                                 startAngleDeg: 150,
                                 sweepAngleDeg: 240,
                                 ranges: const [
-                                  GaugeRange(min: 0, max: 20, color: Color(0xFF0077BB)),
-                                  GaugeRange(min: 20, max: 50, color: Color(0xFF228833)),
-                                  GaugeRange(min: 50, max: 80, color: Color(0xFFEE7733)),
-                                  GaugeRange(min: 80, max: 120, color: Color(0xFFCC3311)),
+                                  GaugeRange(
+                                      min: 0,
+                                      max: 20,
+                                      color: Color(0xFF0077BB)),
+                                  GaugeRange(
+                                      min: 20,
+                                      max: 50,
+                                      color: Color(0xFF228833)),
+                                  GaugeRange(
+                                      min: 50,
+                                      max: 80,
+                                      color: Color(0xFFEE7733)),
+                                  GaugeRange(
+                                      min: 80,
+                                      max: 120,
+                                      color: Color(0xFFCC3311)),
                                 ],
                                 majorDivisions: 6,
                                 showLabels: true,
@@ -271,11 +296,19 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                             max: 1050,
                             startAngleDeg: 160,
                             sweepAngleDeg: 220,
-                            centerLabel: '${_pressCtrl.value.toStringAsFixed(0)} hPa',
+                            centerLabel:
+                                '${_pressCtrl.value.toStringAsFixed(0)} hPa',
                             ranges: const [
-                              GaugeRange(min: 950, max: 980, color: Color(0xFF0077BB)),
-                              GaugeRange(min: 980, max: 1020, color: Color(0xFF228833)),
-                              GaugeRange(min: 1020, max: 1050, color: Color(0xFFEE7733)),
+                              GaugeRange(
+                                  min: 950, max: 980, color: Color(0xFF0077BB)),
+                              GaugeRange(
+                                  min: 980,
+                                  max: 1020,
+                                  color: Color(0xFF228833)),
+                              GaugeRange(
+                                  min: 1020,
+                                  max: 1050,
+                                  color: Color(0xFFEE7733)),
                             ],
                             style: style,
                             mode: mode,
@@ -284,9 +317,7 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 10),
-
                   Expanded(
                     child: _WeatherCard(
                       title: 'HUMIDITY',
@@ -301,11 +332,15 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                             max: 100,
                             startAngleDeg: 160,
                             sweepAngleDeg: 220,
-                            centerLabel: '${_humidCtrl.value.toStringAsFixed(0)}% RH',
+                            centerLabel:
+                                '${_humidCtrl.value.toStringAsFixed(0)}% RH',
                             ranges: const [
-                              GaugeRange(min: 0, max: 30, color: Color(0xFFEE7733)),
-                              GaugeRange(min: 30, max: 70, color: Color(0xFF228833)),
-                              GaugeRange(min: 70, max: 100, color: Color(0xFF0077BB)),
+                              GaugeRange(
+                                  min: 0, max: 30, color: Color(0xFFEE7733)),
+                              GaugeRange(
+                                  min: 30, max: 70, color: Color(0xFF228833)),
+                              GaugeRange(
+                                  min: 70, max: 100, color: Color(0xFF0077BB)),
                             ],
                             style: style,
                             mode: mode,
@@ -407,8 +442,14 @@ class _WeatherDashboardScreenState extends State<WeatherDashboardScreen> {
                                     ),
                                   ),
                                 ),
-                                const Text('mm', style: TextStyle(color: Color(0xFF888888), fontSize: 13)),
-                                const Text('24h total', style: TextStyle(color: Color(0xFF888888), fontSize: 10)),
+                                const Text('mm',
+                                    style: TextStyle(
+                                        color: Color(0xFF888888),
+                                        fontSize: 13)),
+                                const Text('24h total',
+                                    style: TextStyle(
+                                        color: Color(0xFF888888),
+                                        fontSize: 10)),
                               ],
                             ),
                           ],
@@ -439,7 +480,8 @@ class _WeatherCard extends StatelessWidget {
   final Widget child;
   final Color color;
 
-  const _WeatherCard({required this.title, required this.child, required this.color});
+  const _WeatherCard(
+      {required this.title, required this.child, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -488,6 +530,8 @@ class _UvLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold));
+    return Text(text,
+        style:
+            TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold));
   }
 }

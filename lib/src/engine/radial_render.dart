@@ -252,7 +252,8 @@ class RadialGaugeRenderBox extends RenderBox {
     // Colored ranges
     for (final range in _ranges) {
       final rStart = valueToAngle(range.min, _min, _max, startRad, sweepRad);
-      final rSweep = valueToAngle(range.max, _min, _max, startRad, sweepRad) - rStart;
+      final rSweep =
+          valueToAngle(range.max, _min, _max, startRad, sweepRad) - rStart;
       final rangePaint = Paint()
         ..color = range.color
         ..style = PaintingStyle.stroke
@@ -295,7 +296,8 @@ class RadialGaugeRenderBox extends RenderBox {
             text: TextSpan(text: label, style: _tokens.labelStyle),
             textDirection: TextDirection.ltr,
           )..layout();
-          final labelR = radius - _tokens.majorTick.length - _tokens.labelOffset;
+          final labelR =
+              radius - _tokens.majorTick.length - _tokens.labelOffset;
           final lx = center.dx + cos * labelR - tp.width / 2;
           final ly = center.dy + sin * labelR - tp.height / 2;
           tp.paint(canvas, Offset(lx, ly));
@@ -390,8 +392,8 @@ class RadialGaugeRenderBox extends RenderBox {
 
     // Extra pointers — drawn after the main needle so they appear on top.
     for (final pointer in _extraPointers) {
-      final pointerAngle =
-          valueToAngle(pointer.controller.value, _min, _max, startRad, sweepRad);
+      final pointerAngle = valueToAngle(
+          pointer.controller.value, _min, _max, startRad, sweepRad);
       _paintExtraNeedle(canvas, center, radius, pointerAngle, pointer, _tokens);
     }
 
@@ -435,8 +437,8 @@ class RadialGaugeRenderBox extends RenderBox {
       canvas.drawLine(
         Offset(center.dx - cos * _tokens.knobRadius * 0.5,
             center.dy - sin * _tokens.knobRadius * 0.5),
-        Offset(center.dx + cos * radius * 0.85,
-            center.dy + sin * radius * 0.85),
+        Offset(
+            center.dx + cos * radius * 0.85, center.dy + sin * radius * 0.85),
         shadowPaint,
       );
     }
@@ -448,8 +450,7 @@ class RadialGaugeRenderBox extends RenderBox {
     canvas.drawLine(
       Offset(center.dx - cos * _tokens.knobRadius * 0.5,
           center.dy - sin * _tokens.knobRadius * 0.5),
-      Offset(
-          center.dx + cos * radius * 0.85, center.dy + sin * radius * 0.85),
+      Offset(center.dx + cos * radius * 0.85, center.dy + sin * radius * 0.85),
       needlePaint,
     );
 

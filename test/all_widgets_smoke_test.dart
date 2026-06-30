@@ -17,8 +17,8 @@ void main() {
 
     testWidgets('LinearGauge', (tester) async {
       final c = GaugeController(initialValue: 50);
-      await tester.pumpWidget(MaterialApp(
-          home: Scaffold(body: LinearGauge(controller: c))));
+      await tester.pumpWidget(
+          MaterialApp(home: Scaffold(body: LinearGauge(controller: c))));
       addTearDown(c.dispose);
     });
 
@@ -26,8 +26,8 @@ void main() {
       final c = GaugeController(initialValue: 50);
       await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-              body: SizedBox(
-                  height: 28, child: SegmentedGauge(controller: c)))));
+              body:
+                  SizedBox(height: 28, child: SegmentedGauge(controller: c)))));
       addTearDown(c.dispose);
     });
 
@@ -35,8 +35,8 @@ void main() {
       final c = GaugeController(initialValue: 50);
       await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-              body:
-                  SizedBox(height: 200, width: 200, child: ArcGauge(controller: c)))));
+              body: SizedBox(
+                  height: 200, width: 200, child: ArcGauge(controller: c)))));
       addTearDown(c.dispose);
     });
 
@@ -44,14 +44,15 @@ void main() {
       final c = GaugeController(initialValue: 22);
       await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-              body: SizedBox(height: 200, child: ThermometerGauge(controller: c)))));
+              body: SizedBox(
+                  height: 200, child: ThermometerGauge(controller: c)))));
       addTearDown(c.dispose);
     });
 
     testWidgets('BulletGauge', (tester) async {
       final c = GaugeController(initialValue: 72);
-      await tester.pumpWidget(MaterialApp(
-          home: Scaffold(body: BulletGauge(controller: c))));
+      await tester.pumpWidget(
+          MaterialApp(home: Scaffold(body: BulletGauge(controller: c))));
       addTearDown(c.dispose);
     });
 
@@ -68,8 +69,8 @@ void main() {
       final c = GaugeController(initialValue: 5);
       await tester.pumpWidget(MaterialApp(
           home: Scaffold(
-              body:
-                  SizedBox(height: 60, child: InclinometerGauge(controller: c)))));
+              body: SizedBox(
+                  height: 60, child: InclinometerGauge(controller: c)))));
       addTearDown(c.dispose);
     });
 

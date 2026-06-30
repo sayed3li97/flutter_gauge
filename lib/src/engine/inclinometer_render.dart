@@ -76,7 +76,8 @@ class InclinometerGaugeRenderBox extends RenderBox {
     final canvas = Canvas(recorder);
 
     // Draw tube background
-    final tubeRect = Rect.fromLTWH(0, size.height * 0.2, size.width, size.height * 0.6);
+    final tubeRect =
+        Rect.fromLTWH(0, size.height * 0.2, size.width, size.height * 0.6);
     final tubeRRect = RRect.fromRectAndRadius(
       tubeRect,
       Radius.circular(size.height * 0.3),
