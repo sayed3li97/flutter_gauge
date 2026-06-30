@@ -3,7 +3,7 @@ description: >-
   Open-source Flutter gauges: radial, linear, segmented, arc, thermometer.
   Three built-in design styles (Material 3, Cupertino, Executive), pluggable
   style architecture, MIT license. No vendor lock-in. Zero external dependencies.
-version: 0.1.0
+version: 0.3.0
 homepage: https://github.com/sayed3li97/flutter_gauge
 repository: https://github.com/sayed3li97/flutter_gauge
 issue_tracker: https://github.com/sayed3li97/flutter_gauge/issues
