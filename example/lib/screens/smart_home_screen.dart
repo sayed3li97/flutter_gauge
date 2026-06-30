@@ -125,14 +125,11 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
                   _rng.nextDouble() * 0.2)
               .clamp(0, cfg.gridMax);
       final surplus = (_solarCtrl.value - _powerCtrl.value).clamp(-2.0, 2.0);
-      _batteryCtrl.value =
-          (_batteryCtrl.value + surplus * 0.4).clamp(5, 100);
-      _livingCtrl.value =
-          (_livingCtrl.value + 0.04 * _rng.nextDouble())
-              .clamp(0, cfg.roomBudgetKwh);
-      _kitchenCtrl.value =
-          (_kitchenCtrl.value + 0.03 * _rng.nextDouble())
-              .clamp(0, cfg.roomBudgetKwh);
+      _batteryCtrl.value = (_batteryCtrl.value + surplus * 0.4).clamp(5, 100);
+      _livingCtrl.value = (_livingCtrl.value + 0.04 * _rng.nextDouble())
+          .clamp(0, cfg.roomBudgetKwh);
+      _kitchenCtrl.value = (_kitchenCtrl.value + 0.03 * _rng.nextDouble())
+          .clamp(0, cfg.roomBudgetKwh);
     });
   }
 
@@ -237,14 +234,20 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
             listenable: _batteryCtrl,
             builder: (_, __) {
               final pct = _batteryCtrl.value;
-              final color =
-                  pct > 50 ? _kBattery : pct > 20 ? _kNormal : _kPeak;
+              final color = pct > 50
+                  ? _kBattery
+                  : pct > 20
+                      ? _kNormal
+                      : _kPeak;
               final icon = pct > 80
                   ? Icons.battery_full
                   : pct > 40
                       ? Icons.battery_4_bar
                       : Icons.battery_alert;
-              return _StatusChip(label: '${pct.toStringAsFixed(0)}%', icon: icon, color: color);
+              return _StatusChip(
+                  label: '${pct.toStringAsFixed(0)}%',
+                  icon: icon,
+                  color: color);
             },
           ),
         ],
@@ -667,7 +670,8 @@ class _SmartHomeScreenState extends State<SmartHomeScreen> {
             ctrl: _bedroomCtrl,
             color: _kBedroom,
             config: cfg,
-            trailing: const Icon(Icons.nightlight_round, color: _kDim, size: 14),
+            trailing:
+                const Icon(Icons.nightlight_round, color: _kDim, size: 14),
           ),
           Divider(height: 18, color: _kBorder.withValues(alpha: 0.5)),
           // ── Kitchen: center overlay warning text ─────────────────────────

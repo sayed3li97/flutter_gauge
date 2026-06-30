@@ -11,7 +11,6 @@ class MaterialGaugeStyle extends GaugeStyle {
 
   @override
   GaugeTokens resolve(BuildContext context, GaugeMode mode) {
-    
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
     final isInstrument = mode == GaugeMode.instrument;
@@ -43,9 +42,8 @@ class MaterialGaugeStyle extends GaugeStyle {
       ),
       labelStyle: (tt.bodySmall ?? const TextStyle()).copyWith(
         color: cs.onSurfaceVariant,
-        fontFeatures: isInstrument
-            ? const [FontFeature.tabularFigures()]
-            : null,
+        fontFeatures:
+            isInstrument ? const [FontFeature.tabularFigures()] : null,
       ),
       labelOffset: 16,
       zoneNormal: const Color(0xFF0077BB),

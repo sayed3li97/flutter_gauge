@@ -53,9 +53,8 @@ class ExecutiveGaugeStyle extends GaugeStyle {
         fontSize: 11,
         color: _chrome,
         letterSpacing: 0.5,
-        fontFeatures: isInstrument
-            ? const [FontFeature.tabularFigures()]
-            : null,
+        fontFeatures:
+            isInstrument ? const [FontFeature.tabularFigures()] : null,
       ),
       labelOffset: 18,
       zoneNormal: const Color(0xFF0077BB),

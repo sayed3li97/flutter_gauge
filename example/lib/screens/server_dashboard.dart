@@ -48,20 +48,32 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
     _timer = Timer.periodic(const Duration(milliseconds: 800), (_) {
       _phase += 0.18;
 
-      _cpu1Ctrl.value = (45.0 + 30.0 * sin(_phase * 0.9) + _rng.nextDouble() * 10).clamp(0, 100);
-      _cpu2Ctrl.value = (38.0 + 35.0 * sin(_phase * 1.1 + 0.5) + _rng.nextDouble() * 8).clamp(0, 100);
+      _cpu1Ctrl.value =
+          (45.0 + 30.0 * sin(_phase * 0.9) + _rng.nextDouble() * 10)
+              .clamp(0, 100);
+      _cpu2Ctrl.value =
+          (38.0 + 35.0 * sin(_phase * 1.1 + 0.5) + _rng.nextDouble() * 8)
+              .clamp(0, 100);
       _memCtrl.value = (72.0 + 8.0 * sin(_phase * 0.4)).clamp(0, 100);
-      _gpuCtrl.value = (55.0 + 25.0 * sin(_phase * 0.7) + _rng.nextDouble() * 12).clamp(0, 100);
+      _gpuCtrl.value =
+          (55.0 + 25.0 * sin(_phase * 0.7) + _rng.nextDouble() * 12)
+              .clamp(0, 100);
 
       _diskDevCtrl.value = (68.0 + 0.5 * sin(_phase * 0.05)).clamp(0, 100);
       _diskHomeCtrl.value = (41.0 + 0.3 * sin(_phase * 0.03)).clamp(0, 100);
       _diskTmpCtrl.value = (12.0 + 4.0 * sin(_phase * 0.6)).clamp(0, 100);
 
-      _netDlCtrl.value = (120.0 + 80.0 * sin(_phase * 1.2) + _rng.nextDouble() * 40).clamp(0, 1000);
-      _netUlCtrl.value = (35.0 + 25.0 * sin(_phase * 0.8) + _rng.nextDouble() * 15).clamp(0, 1000);
+      _netDlCtrl.value =
+          (120.0 + 80.0 * sin(_phase * 1.2) + _rng.nextDouble() * 40)
+              .clamp(0, 1000);
+      _netUlCtrl.value =
+          (35.0 + 25.0 * sin(_phase * 0.8) + _rng.nextDouble() * 15)
+              .clamp(0, 1000);
 
       // Occasionally trigger queue warning
-      _queueStatusCtrl.value = sin(_phase * 0.15) > 0.7 ? 2.0 : (sin(_phase * 0.15) > 0.3 ? 1.0 : 0.0);
+      _queueStatusCtrl.value = sin(_phase * 0.15) > 0.7
+          ? 2.0
+          : (sin(_phase * 0.15) > 0.3 ? 1.0 : 0.0);
     });
   }
 
@@ -142,12 +154,14 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
                         ),
                         Text(
                           'prod-cluster-01  •  rack 4B',
-                          style: TextStyle(color: Color(0xFF555555), fontSize: 11),
+                          style:
+                              TextStyle(color: Color(0xFF555555), fontSize: 11),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xFF00CC88).withValues(alpha: 0.1),
                         border: Border.all(color: const Color(0xFF00CC88)),
@@ -236,11 +250,23 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
                 // ── Disk Usage ─────────────────────────────────────────
                 const Text('DISK USAGE', style: labelStyle),
                 const SizedBox(height: 8),
-                _DiskRow(label: '/dev', ctrl: _diskDevCtrl, style: style, mode: mode),
+                _DiskRow(
+                    label: '/dev',
+                    ctrl: _diskDevCtrl,
+                    style: style,
+                    mode: mode),
                 const SizedBox(height: 6),
-                _DiskRow(label: '/home', ctrl: _diskHomeCtrl, style: style, mode: mode),
+                _DiskRow(
+                    label: '/home',
+                    ctrl: _diskHomeCtrl,
+                    style: style,
+                    mode: mode),
                 const SizedBox(height: 6),
-                _DiskRow(label: '/tmp', ctrl: _diskTmpCtrl, style: style, mode: mode),
+                _DiskRow(
+                    label: '/tmp',
+                    ctrl: _diskTmpCtrl,
+                    style: style,
+                    mode: mode),
 
                 const SizedBox(height: 16),
 
@@ -314,7 +340,8 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
                       _ServiceStatus('DB', _dbStatusCtrl, style, mode),
                       _ServiceStatus('CACHE', _cacheStatusCtrl, style, mode),
                       _ServiceStatus('QUEUE', _queueStatusCtrl, style, mode),
-                      _ServiceStatus('STORAGE', _storageStatusCtrl, style, mode),
+                      _ServiceStatus(
+                          'STORAGE', _storageStatusCtrl, style, mode),
                       _ServiceStatus('CDN', _cdnStatusCtrl, style, mode),
                     ],
                   ),

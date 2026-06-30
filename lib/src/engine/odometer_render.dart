@@ -79,7 +79,8 @@ class OdometerGaugeRenderBox extends RenderBox {
 
   @override
   void performLayout() {
-    final totalDigits = _digitCount + (_decimalDigits > 0 ? _decimalDigits + 1 : 0);
+    final totalDigits =
+        _digitCount + (_decimalDigits > 0 ? _decimalDigits + 1 : 0);
     final w = totalDigits * _digitW + (_unit != null ? 24 : 0) + 16;
     size = constraints.constrain(Size(w, _digitH + 16));
   }
@@ -137,7 +138,8 @@ class OdometerGaugeRenderBox extends RenderBox {
         );
       }
 
-      paintTextOnCanvas(canvas, tp, Offset(x + (_digitW - tp.width) / 2, (size.height - _digitH) / 2));
+      paintTextOnCanvas(canvas, tp,
+          Offset(x + (_digitW - tp.width) / 2, (size.height - _digitH) / 2));
       x += ch == '.' ? 10 : _digitW + 2;
     }
 
@@ -146,7 +148,8 @@ class OdometerGaugeRenderBox extends RenderBox {
         text: TextSpan(text: _unit, style: _tokens.labelStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      paintTextOnCanvas(canvas, utp, Offset(x + 4, size.height / 2 - utp.height / 2));
+      paintTextOnCanvas(
+          canvas, utp, Offset(x + 4, size.height / 2 - utp.height / 2));
     }
 
     canvas.restore();

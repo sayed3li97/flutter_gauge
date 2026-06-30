@@ -11,18 +11,15 @@ class CupertinoGaugeStyle extends GaugeStyle {
 
   @override
   GaugeTokens resolve(BuildContext context, GaugeMode mode) {
-    
     final ct = CupertinoTheme.of(context);
     final isInstrument = mode == GaugeMode.instrument;
     final brightness = CupertinoTheme.brightnessOf(context);
     final isDark = brightness == Brightness.dark;
 
-    final trackColor = isDark
-        ? const Color(0xFF3A3A3C)
-        : const Color(0xFFE5E5EA);
-    final onSurface = isDark
-        ? const Color(0xFFAEAEB2)
-        : const Color(0xFF636366);
+    final trackColor =
+        isDark ? const Color(0xFF3A3A3C) : const Color(0xFFE5E5EA);
+    final onSurface =
+        isDark ? const Color(0xFFAEAEB2) : const Color(0xFF636366);
 
     return GaugeTokens(
       trackColor: trackColor,
@@ -53,9 +50,8 @@ class CupertinoGaugeStyle extends GaugeStyle {
         fontFamily: '.SF Pro Rounded',
         fontSize: 11,
         color: onSurface,
-        fontFeatures: isInstrument
-            ? const [FontFeature.tabularFigures()]
-            : null,
+        fontFeatures:
+            isInstrument ? const [FontFeature.tabularFigures()] : null,
       ),
       labelOffset: 14,
       zoneNormal: const Color(0xFF0077BB),

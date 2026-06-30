@@ -100,7 +100,8 @@ class RadialGauge extends StatelessWidget {
       showLabels: true,
       ranges: [
         GaugeRange(min: 0, max: max * 0.6, color: const Color(0xFF0077BB)),
-        GaugeRange(min: max * 0.6, max: max * 0.8, color: const Color(0xFFEE7733)),
+        GaugeRange(
+            min: max * 0.6, max: max * 0.8, color: const Color(0xFFEE7733)),
         GaugeRange(min: max * 0.8, max: max, color: const Color(0xFFCC3311)),
       ],
       showCenterLabel: showCenterLabel,
@@ -143,7 +144,8 @@ class RadialGauge extends StatelessWidget {
       majorDivisions: 8,
       minorDivisions: 5,
       ranges: [
-        GaugeRange(min: redlineRpm, max: maxRpm, color: const Color(0xFFCC3311)),
+        GaugeRange(
+            min: redlineRpm, max: maxRpm, color: const Color(0xFFCC3311)),
       ],
       showCenterLabel: showCenterLabel,
       centerLabel: centerLabel,
@@ -318,8 +320,7 @@ class RadialGauge extends StatelessWidget {
       unitText: unitText,
     );
 
-    final hasOverlays =
-        child != null || annotations.isNotEmpty;
+    final hasOverlays = child != null || annotations.isNotEmpty;
 
     if (!hasOverlays) return leaf;
 
@@ -332,8 +333,7 @@ class RadialGauge extends StatelessWidget {
           ),
         if (annotations.isNotEmpty)
           LayoutBuilder(builder: (ctx, constraints) {
-            final side = math.min(
-                constraints.maxWidth, constraints.maxHeight);
+            final side = math.min(constraints.maxWidth, constraints.maxHeight);
             if (side == 0) return const SizedBox.shrink();
             final cx = side / 2;
             final cy = side / 2;

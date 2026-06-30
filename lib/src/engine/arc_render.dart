@@ -167,8 +167,8 @@ class ArcGaugeRenderBox extends RenderBox {
     final sweepRad = degToRad(_sweepAngleDeg);
 
     if (_fillColor != null) {
-      canvas.drawCircle(
-          center, radius - _effectiveTrackWidth / 2, Paint()..color = _fillColor!);
+      canvas.drawCircle(center, radius - _effectiveTrackWidth / 2,
+          Paint()..color = _fillColor!);
     }
 
     final trackPaint = Paint()
@@ -221,21 +221,19 @@ class ArcGaugeRenderBox extends RenderBox {
     final startRad = degToRad(_startAngleDeg);
     final sweepRad = degToRad(_sweepAngleDeg);
 
-    final frac =
-        ((_controller.value - _min) / (_max - _min)).clamp(0.0, 1.0);
+    final frac = ((_controller.value - _min) / (_max - _min)).clamp(0.0, 1.0);
     final valueSweep = frac * sweepRad;
 
     if (valueSweep > 0) {
       // Reverse: fill from far end of track backward
-      final arcStart =
-          _reverse ? startRad + sweepRad - valueSweep : startRad;
+      final arcStart = _reverse ? startRad + sweepRad - valueSweep : startRad;
       final rect = Rect.fromCircle(center: center, radius: radius);
 
       // Glow pass
       final glowR = _tokens.valueGlowRadius;
       if (glowR > 0) {
-        final glowColor = _tokens.valueGlowColor ??
-            _tokens.valueColor.withValues(alpha: 0.5);
+        final glowColor =
+            _tokens.valueGlowColor ?? _tokens.valueColor.withValues(alpha: 0.5);
         canvas.drawArc(
           rect,
           arcStart,

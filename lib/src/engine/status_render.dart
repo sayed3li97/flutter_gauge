@@ -122,7 +122,8 @@ class StatusGaugeRenderBox extends RenderBox {
         text: TextSpan(text: _label, style: _tokens.labelStyle),
         textDirection: TextDirection.ltr,
       )..layout();
-      paintTextOnCanvas(canvas, tp, Offset(_radius * 2 + 8, _radius - tp.height / 2));
+      paintTextOnCanvas(
+          canvas, tp, Offset(_radius * 2 + 8, _radius - tp.height / 2));
     }
 
     canvas.restore();

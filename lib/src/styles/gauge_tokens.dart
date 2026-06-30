@@ -370,8 +370,7 @@ class GaugeTokens {
       zoneDanger: Color.lerp(a.zoneDanger, b.zoneDanger, t)!,
       annotationTextStyle:
           TextStyle.lerp(a.annotationTextStyle, b.annotationTextStyle, t)!,
-      dragOverlayColor:
-          Color.lerp(a.dragOverlayColor, b.dragOverlayColor, t)!,
+      dragOverlayColor: Color.lerp(a.dragOverlayColor, b.dragOverlayColor, t)!,
       dragOverlayRadius:
           _lerpDouble(a.dragOverlayRadius, b.dragOverlayRadius, t),
       animationDuration: t < 0.5 ? a.animationDuration : b.animationDuration,

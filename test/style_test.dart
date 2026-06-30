@@ -10,7 +10,8 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              tokens = const DefaultGaugeStyle().resolve(context, GaugeMode.ambient);
+              tokens =
+                  const DefaultGaugeStyle().resolve(context, GaugeMode.ambient);
               return const SizedBox();
             },
           ),
@@ -26,7 +27,8 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              tokens = const DefaultGaugeStyle().resolve(context, GaugeMode.instrument);
+              tokens = const DefaultGaugeStyle()
+                  .resolve(context, GaugeMode.instrument);
               return const SizedBox();
             },
           ),
@@ -48,7 +50,8 @@ void main() {
           ),
           home: Builder(
             builder: (context) {
-              tokens = const MaterialGaugeStyle().resolve(context, GaugeMode.ambient);
+              tokens = const MaterialGaugeStyle()
+                  .resolve(context, GaugeMode.ambient);
               return const SizedBox();
             },
           ),
@@ -65,7 +68,8 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              tokens = const ExecutiveGaugeStyle().resolve(context, GaugeMode.ambient);
+              tokens = const ExecutiveGaugeStyle()
+                  .resolve(context, GaugeMode.ambient);
               return const SizedBox();
             },
           ),

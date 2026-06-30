@@ -77,9 +77,8 @@ class _DataScienceDashboardScreenState
           (0.3 * (1.0 + cos(_phase * 0.05)) / 2.0 + 0.01).clamp(0.0, 0.5);
 
       // GPU resources
-      _gpuCtrl.value =
-          (94.0 + 4.0 * sin(_phase * 1.5) + _rng.nextDouble() * 3)
-              .clamp(0, 100);
+      _gpuCtrl.value = (94.0 + 4.0 * sin(_phase * 1.5) + _rng.nextDouble() * 3)
+          .clamp(0, 100);
       _vramCtrl.value = (77.5 + 1.5 * sin(_phase * 0.4)).clamp(0, 100);
       _throughputCtrl.value =
           (450.0 + 50.0 * sin(_phase * 1.1) + _rng.nextDouble() * 28)
@@ -528,13 +527,10 @@ class _DataScienceDashboardScreenState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _PipelineStep(
-                          'DATA\nLOADER', _loaderCtrl, style, mode),
-                      _PipelineStep(
-                          'PRE-\nPROC', _preprocCtrl, style, mode),
+                      _PipelineStep('DATA\nLOADER', _loaderCtrl, style, mode),
+                      _PipelineStep('PRE-\nPROC', _preprocCtrl, style, mode),
                       _PipelineStep('FWD\nPASS', _fwdCtrl, style, mode),
-                      _PipelineStep(
-                          'BACK-\nPROP', _bkpropCtrl, style, mode),
+                      _PipelineStep('BACK-\nPROP', _bkpropCtrl, style, mode),
                       _PipelineStep('LOGGER', _loggerCtrl, style, mode),
                     ],
                   ),
@@ -643,8 +639,9 @@ class _MetricArc extends StatelessWidget {
             // Override colorScheme.primary so each metric has its own colour
             child: Theme(
               data: Theme.of(context).copyWith(
-                colorScheme:
-                    Theme.of(context).colorScheme.copyWith(primary: accentColor),
+                colorScheme: Theme.of(context)
+                    .colorScheme
+                    .copyWith(primary: accentColor),
               ),
               child: ListenableBuilder(
                 listenable: ctrl,

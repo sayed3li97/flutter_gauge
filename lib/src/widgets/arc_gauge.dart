@@ -216,8 +216,8 @@ class ArcGauge extends StatelessWidget {
             return ListenableBuilder(
               listenable: controller,
               builder: (ctx2, _) {
-                final side = math.min(
-                    constraints.maxWidth, constraints.maxHeight);
+                final side =
+                    math.min(constraints.maxWidth, constraints.maxHeight);
                 if (side == 0) return const SizedBox.shrink();
                 final cx = side / 2;
                 final cy = side / 2;

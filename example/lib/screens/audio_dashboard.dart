@@ -21,10 +21,11 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
   final _masterCtrl = GaugeController(initialValue: 0.0);
 
   // Metering/analysis instruments
-  final _loudnessCtrl = GaugeController(initialValue: -18.0);   // LUFS: -23..0
-  final _dynRangeCtrl = GaugeController(initialValue: 12.0);    // DR: 0..20
-  final _gainRedCtrl = GaugeController(initialValue: -4.0);     // Gain reduction: -20..0 dB
-  final _panCtrl = GaugeController(initialValue: 0.0);          // Pan: -100..+100
+  final _loudnessCtrl = GaugeController(initialValue: -18.0); // LUFS: -23..0
+  final _dynRangeCtrl = GaugeController(initialValue: 12.0); // DR: 0..20
+  final _gainRedCtrl =
+      GaugeController(initialValue: -4.0); // Gain reduction: -20..0 dB
+  final _panCtrl = GaugeController(initialValue: 0.0); // Pan: -100..+100
 
   Timer? _timer;
   final _rng = Random();
@@ -34,8 +35,13 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
   static const _channelFreqs = [1.8, 0.9, 1.3, 1.4, 0.7, 1.1];
 
   List<GaugeController> get _channelCtrls => [
-    _kickCtrl, _bassCtrl, _gtrLCtrl, _gtrRCtrl, _voxCtrl, _masterCtrl,
-  ];
+        _kickCtrl,
+        _bassCtrl,
+        _gtrLCtrl,
+        _gtrRCtrl,
+        _voxCtrl,
+        _masterCtrl,
+      ];
 
   @override
   void initState() {
@@ -59,7 +65,8 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
           .clamp(0.0, 100.0);
 
       // Loudness: -23 to 0 LUFS, slowly wanders
-      _loudnessCtrl.value = (-16.0 + 4.0 * sin(_phase * 0.18)).clamp(-23.0, 0.0);
+      _loudnessCtrl.value =
+          (-16.0 + 4.0 * sin(_phase * 0.18)).clamp(-23.0, 0.0);
 
       // Dynamic range varies inversely with loudness
       _dynRangeCtrl.value = (14.0 - 3.0 * sin(_phase * 0.18)).clamp(0.0, 20.0);
@@ -161,14 +168,16 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
                                 final (label, ctrl, accent) = ch;
                                 return Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 3),
                                     child: Column(
                                       children: [
                                         // dBFS value at top
                                         ListenableBuilder(
                                           listenable: ctrl,
                                           builder: (_, __) {
-                                            final dbfs = -60.0 + ctrl.value * 0.6;
+                                            final dbfs =
+                                                -60.0 + ctrl.value * 0.6;
                                             return Text(
                                               dbfs.toStringAsFixed(0),
                                               style: TextStyle(
@@ -193,11 +202,15 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                         color: ctrl.value > 90
-                                                            ? const Color(0xFFCC3311)
-                                                            : Colors.transparent,
+                                                            ? const Color(
+                                                                0xFFCC3311)
+                                                            : Colors
+                                                                .transparent,
                                                         width: 1.5,
                                                       ),
-                                                      borderRadius: BorderRadius.circular(2),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              2),
                                                     ),
                                                     child: LevelMeterGauge(
                                                       controller: ctrl,
@@ -310,7 +323,8 @@ class _AudioDashboardScreenState extends State<AudioDashboardScreen> {
                           const SizedBox(height: 12),
 
                           // Gain Reduction
-                          const Text('GAIN REDUCTION  (dB)', style: headerStyle),
+                          const Text('GAIN REDUCTION  (dB)',
+                              style: headerStyle),
                           const SizedBox(height: 6),
                           SizedBox(
                             height: 50,
@@ -385,13 +399,16 @@ class _ConsoleLed extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            boxShadow: [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 4)],
+            boxShadow: [
+              BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 4)
+            ],
           ),
         ),
         const SizedBox(width: 4),
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF666666), fontSize: 9, letterSpacing: 1.0),
+          style: const TextStyle(
+              color: Color(0xFF666666), fontSize: 9, letterSpacing: 1.0),
         ),
       ],
     );

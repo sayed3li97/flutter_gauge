@@ -175,8 +175,8 @@ class LinearGaugeRenderBox extends RenderBox {
   @override
   void performLayout() {
     if (_orientation == LinearGaugeOrientation.horizontal) {
-      size = constraints.constrain(
-          Size(constraints.maxWidth, _tokens.trackStrokeWidth + 40));
+      size = constraints
+          .constrain(Size(constraints.maxWidth, _tokens.trackStrokeWidth + 40));
     } else {
       size = constraints.constrain(
           Size(_tokens.trackStrokeWidth + 40, constraints.maxHeight));
@@ -292,8 +292,8 @@ class LinearGaugeRenderBox extends RenderBox {
       if (useRRect) {
         canvas.drawRRect(
           RRect.fromRectAndRadius(
-            Rect.fromLTRB(cx - trackW / 2, top - trackW / 2,
-                cx + trackW / 2, bottom + trackW / 2),
+            Rect.fromLTRB(cx - trackW / 2, top - trackW / 2, cx + trackW / 2,
+                bottom + trackW / 2),
             Radius.circular(bRadius),
           ),
           Paint()
@@ -305,8 +305,8 @@ class LinearGaugeRenderBox extends RenderBox {
           final rF = valueToFraction(range.min, _min, _max);
           final rE = valueToFraction(range.max, _min, _max);
           canvas.drawRect(
-            Rect.fromLTRB(cx - trackW / 2, top + rF * trackLen,
-                cx + trackW / 2, top + rE * trackLen),
+            Rect.fromLTRB(cx - trackW / 2, top + rF * trackLen, cx + trackW / 2,
+                top + rE * trackLen),
             Paint()
               ..color = range.color
               ..style = PaintingStyle.fill,
