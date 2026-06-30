@@ -14,6 +14,8 @@ class GaugeTokensOverride {
     this.valueColor,
     this.valueStrokeWidth,
     this.valueGradient,
+    this.valueGlowRadius,
+    this.valueGlowColor,
     this.needleColor,
     this.needleWidth,
     this.needleTipStyle,
@@ -43,6 +45,8 @@ class GaugeTokensOverride {
   final Color? valueColor;
   final double? valueStrokeWidth;
   final Gradient? valueGradient;
+  final double? valueGlowRadius;
+  final Color? valueGlowColor;
   final Color? needleColor;
   final double? needleWidth;
   final NeedleTipStyle? needleTipStyle;
@@ -72,6 +76,8 @@ class GaugeTokensOverride {
         valueColor: valueColor,
         valueStrokeWidth: valueStrokeWidth,
         valueGradient: valueGradient,
+        valueGlowRadius: valueGlowRadius,
+        valueGlowColor: valueGlowColor,
         needleColor: needleColor,
         needleWidth: needleWidth,
         needleTipStyle: needleTipStyle,

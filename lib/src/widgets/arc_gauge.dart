@@ -231,13 +231,17 @@ class ArcGauge extends StatelessWidget {
                     : startRad + frac * sweepRad;
                 final x = cx + math.cos(angle) * radius;
                 final y = cy + math.sin(angle) * radius;
-                return Positioned(
-                  left: x,
-                  top: y,
-                  child: FractionalTranslation(
-                    translation: const Offset(-0.5, -0.5),
-                    child: widgetIndicator!,
-                  ),
+                return Stack(
+                  children: [
+                    Positioned(
+                      left: x,
+                      top: y,
+                      child: FractionalTranslation(
+                        translation: const Offset(-0.5, -0.5),
+                        child: widgetIndicator!,
+                      ),
+                    ),
+                  ],
                 );
               },
             );

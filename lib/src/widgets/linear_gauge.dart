@@ -224,13 +224,17 @@ class LinearGauge extends StatelessWidget {
                   final effectiveFrac = reverse ? 1.0 - frac : frac;
                   final x = left + effectiveFrac * trackLen;
                   final y = h / 2;
-                  return Positioned(
-                    left: x,
-                    top: y,
-                    child: FractionalTranslation(
-                      translation: const Offset(-0.5, -0.5),
-                      child: widgetIndicator!,
-                    ),
+                  return Stack(
+                    children: [
+                      Positioned(
+                        left: x,
+                        top: y,
+                        child: FractionalTranslation(
+                          translation: const Offset(-0.5, -0.5),
+                          child: widgetIndicator!,
+                        ),
+                      ),
+                    ],
                   );
                 } else {
                   final w = constraints.maxWidth;
@@ -241,13 +245,17 @@ class LinearGauge extends StatelessWidget {
                   final effectiveFrac = reverse ? 1.0 - frac : frac;
                   final y = top + effectiveFrac * trackLen;
                   final x = w / 2;
-                  return Positioned(
-                    left: x,
-                    top: y,
-                    child: FractionalTranslation(
-                      translation: const Offset(-0.5, -0.5),
-                      child: widgetIndicator!,
-                    ),
+                  return Stack(
+                    children: [
+                      Positioned(
+                        left: x,
+                        top: y,
+                        child: FractionalTranslation(
+                          translation: const Offset(-0.5, -0.5),
+                          child: widgetIndicator!,
+                        ),
+                      ),
+                    ],
                   );
                 }
               },
