@@ -17,12 +17,14 @@ class ArtificialHorizonGauge extends LeafRenderObjectWidget {
     required this.rollController,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   final GaugeController pitchController;
   final GaugeController rollController;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   HorizonGaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -72,12 +74,15 @@ class ArtificialHorizonGauge extends LeafRenderObjectWidget {
       pitchController: pitchController,
       rollController: rollController,
       tokens: _resolve(context),
+      semanticsLabel: semanticsLabel,
     );
   }
 
   @override
   void updateRenderObject(
       BuildContext context, HorizonGaugeRenderBox renderObject) {
-    renderObject.tokens = _resolve(context);
+    renderObject
+      ..tokens = _resolve(context)
+      ..semanticsLabel = semanticsLabel;
   }
 }

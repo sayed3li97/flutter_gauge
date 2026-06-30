@@ -19,6 +19,7 @@ class ThermometerGauge extends LeafRenderObjectWidget {
     this.showScale = true,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Oven / industrial temperature preset.
@@ -65,6 +66,7 @@ class ThermometerGauge extends LeafRenderObjectWidget {
   final bool showScale;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -82,6 +84,7 @@ class ThermometerGauge extends LeafRenderObjectWidget {
       maxCelsius: maxCelsius,
       scale: scale,
       showScale: showScale,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -90,6 +93,7 @@ class ThermometerGauge extends LeafRenderObjectWidget {
       BuildContext context, ThermometerGaugeRenderBox renderObject) {
     renderObject
       ..tokens = _resolve(context)
-      ..scale = scale;
+      ..scale = scale
+      ..semanticsLabel = semanticsLabel;
   }
 }

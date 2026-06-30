@@ -18,6 +18,7 @@ class LevelMeterGauge extends LeafRenderObjectWidget {
     this.gap = 4,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Stereo VU meter preset.
@@ -46,6 +47,7 @@ class LevelMeterGauge extends LeafRenderObjectWidget {
   final double gap;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -63,6 +65,7 @@ class LevelMeterGauge extends LeafRenderObjectWidget {
       max: max,
       channelCount: channelCount,
       gap: gap,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -73,6 +76,7 @@ class LevelMeterGauge extends LeafRenderObjectWidget {
       ..tokens = _resolve(context)
       ..channelCount = channelCount
       ..min = min
-      ..max = max;
+      ..max = max
+      ..semanticsLabel = semanticsLabel;
   }
 }

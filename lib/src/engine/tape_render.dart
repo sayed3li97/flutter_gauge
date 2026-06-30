@@ -14,13 +14,15 @@ class TapeGaugeRenderBox extends RenderBox {
     required double tickInterval,
     required String? unit,
     required bool vertical,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
         _max = max,
         _tickInterval = tickInterval,
         _unit = unit,
-        _vertical = vertical {
+        _vertical = vertical,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -31,11 +33,20 @@ class TapeGaugeRenderBox extends RenderBox {
   double _tickInterval;
   final String? _unit;
   final bool _vertical;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -59,6 +70,15 @@ class TapeGaugeRenderBox extends RenderBox {
     if (_tickInterval == v) return;
     _tickInterval = v;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Tape gauge'
+      ..value = _controller.value.toStringAsFixed(0)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

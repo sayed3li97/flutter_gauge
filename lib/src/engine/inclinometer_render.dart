@@ -13,15 +13,18 @@ class InclinometerGaugeRenderBox extends RenderBox {
     required GaugeController controller,
     required GaugeTokens tokens,
     required double maxAngle,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
-        _maxAngle = maxAngle {
+        _maxAngle = maxAngle,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
   final GaugeController _controller;
   GaugeTokens _tokens;
   double _maxAngle;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -29,7 +32,15 @@ class InclinometerGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -43,6 +54,15 @@ class InclinometerGaugeRenderBox extends RenderBox {
     _maxAngle = v;
     _staticPicture = null;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Inclinometer'
+      ..value = '${_controller.value.toStringAsFixed(1)}°'
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

@@ -16,6 +16,7 @@ class StatusGauge extends LeafRenderObjectWidget {
     this.label,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   final GaugeController controller;
@@ -23,6 +24,7 @@ class StatusGauge extends LeafRenderObjectWidget {
   final String? label;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -38,6 +40,7 @@ class StatusGauge extends LeafRenderObjectWidget {
       tokens: _resolve(context),
       radius: radius,
       label: label,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -47,6 +50,7 @@ class StatusGauge extends LeafRenderObjectWidget {
     renderObject
       ..tokens = _resolve(context)
       ..radius = radius
-      ..label = label;
+      ..label = label
+      ..semanticsLabel = semanticsLabel;
   }
 }

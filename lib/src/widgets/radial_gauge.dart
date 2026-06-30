@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
 import '../core/gauge_mode.dart';
+import '../core/gauge_pointer.dart';
 import '../core/gauge_range.dart';
 import '../engine/radial_render.dart';
 import '../styles/extensions/gauge_theme_extension.dart';
 import '../styles/gauge_style.dart';
 import '../styles/gauge_tokens.dart';
 
-/// A radial (circular) gauge with optional needle, ticks, labels, and ranges.
+/// A radial (circular) gauge with optional needle, ticks, labels, ranges,
+/// extra pointers, and full accessibility support.
+///
+/// The gauge resolves its visual tokens from [style] if provided, falling back
+/// to any [GaugeThemeExtension] registered on the ambient [Theme], and finally
+/// to the built-in [DefaultGaugeStyle].
 ///
 /// Example:
 /// ```dart
@@ -18,7 +24,26 @@ import '../styles/gauge_tokens.dart';
 ///   max: 100,
 /// )
 /// ```
+///
+/// With an extra pointer (e.g. a speed-limit marker):
+/// ```dart
+/// RadialGauge(
+///   controller: speedCtrl,
+///   min: 0,
+///   max: 200,
+///   extraPointers: [
+///     GaugePointer(
+///       controller: limitCtrl,
+///       color: Colors.red,
+///       label: 'Speed limit',
+///     ),
+///   ],
+/// )
+/// ```
 class RadialGauge extends LeafRenderObjectWidget {
+  /// Creates a [RadialGauge].
+  ///
+  /// [controller] is required; all other parameters have sensible defaults.
   const RadialGauge({
     super.key,
     required this.controller,
@@ -38,6 +63,8 @@ class RadialGauge extends LeafRenderObjectWidget {
     this.centerLabelStyle,
     this.style,
     this.mode,
+    this.extraPointers = const [],
+    this.semanticsLabel,
   });
 
   // ─── Named constructors / presets ───────────────────────────────────────────
@@ -52,6 +79,8 @@ class RadialGauge extends LeafRenderObjectWidget {
     TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
+    List<GaugePointer> extraPointers = const [],
+    String? semanticsLabel,
   }) {
     return RadialGauge(
       key: key,
@@ -74,6 +103,8 @@ class RadialGauge extends LeafRenderObjectWidget {
       centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
+      extraPointers: extraPointers,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -88,6 +119,8 @@ class RadialGauge extends LeafRenderObjectWidget {
     TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
+    List<GaugePointer> extraPointers = const [],
+    String? semanticsLabel,
   }) {
     return RadialGauge(
       key: key,
@@ -104,6 +137,8 @@ class RadialGauge extends LeafRenderObjectWidget {
       centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
+      extraPointers: extraPointers,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -116,6 +151,8 @@ class RadialGauge extends LeafRenderObjectWidget {
     TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
+    List<GaugePointer> extraPointers = const [],
+    String? semanticsLabel,
   }) {
     return RadialGauge(
       key: key,
@@ -134,6 +171,8 @@ class RadialGauge extends LeafRenderObjectWidget {
       centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
+      extraPointers: extraPointers,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -146,6 +185,8 @@ class RadialGauge extends LeafRenderObjectWidget {
     TextStyle? centerLabelStyle,
     GaugeStyle? style,
     GaugeMode? mode,
+    List<GaugePointer> extraPointers = const [],
+    String? semanticsLabel,
   }) {
     return RadialGauge(
       key: key,
@@ -162,28 +203,88 @@ class RadialGauge extends LeafRenderObjectWidget {
       centerLabelStyle: centerLabelStyle,
       style: style,
       mode: mode,
+      extraPointers: extraPointers,
+      semanticsLabel: semanticsLabel,
     );
   }
 
   // ─── Properties ─────────────────────────────────────────────────────────────
 
+  /// The controller that drives the primary needle position.
   final GaugeController controller;
+
+  /// Minimum value on the scale. Defaults to `0`.
   final double min;
+
+  /// Maximum value on the scale. Defaults to `100`.
   final double max;
+
+  /// Angle in degrees at which the arc begins, measured clockwise from the
+  /// positive x-axis (3 o'clock). Defaults to `225` (roughly 7 o'clock).
   final double startAngleDeg;
+
+  /// Total sweep of the arc in degrees. Defaults to `270`.
   final double sweepAngleDeg;
+
+  /// Coloured bands painted over the track to highlight value zones.
   final List<GaugeRange> ranges;
+
+  /// Number of major tick marks (and label positions) drawn on the track.
+  /// Defaults to `5`.
   final int majorDivisions;
+
+  /// Number of minor tick intervals between each pair of major ticks.
+  /// Set to `0` to disable minor ticks. Defaults to `5`.
   final int minorDivisions;
+
+  /// Whether to render numeric labels at each major tick. Defaults to `true`.
   final bool showLabels;
+
+  /// Whether to render the main needle. Defaults to `true`.
   final bool showNeedle;
+
+  /// Whether the gauge responds to pointer/touch events. When `true`, dragging
+  /// updates [onChanged]. Defaults to `false`.
   final bool interactive;
+
+  /// Called whenever the user drags the gauge while [interactive] is `true`.
   final ValueChanged<double>? onChanged;
+
+  /// Whether to render a numeric label at the centre of the gauge. The label
+  /// defaults to the formatted [controller] value unless [centerLabel] is set.
   final bool showCenterLabel;
+
+  /// Overrides the auto-formatted value shown when [showCenterLabel] is `true`.
   final String? centerLabel;
+
+  /// Text style for the centre label. Falls back to a bold version of the
+  /// gauge's [GaugeTokens.labelStyle] when `null`.
   final TextStyle? centerLabelStyle;
+
+  /// Visual style overrides. When `null` the gauge inherits from
+  /// [GaugeThemeExtension] or uses [DefaultGaugeStyle].
   final GaugeStyle? style;
+
+  /// Light/dark rendering mode. Falls back to the theme extension, then
+  /// [GaugeMode.ambient].
   final GaugeMode? mode;
+
+  /// Additional needles overlaid on the gauge face.
+  ///
+  /// Each [GaugePointer] has its own [GaugeController] and optional colour,
+  /// stroke width, and length fraction, making it easy to display a target
+  /// value, a speed limit, or a historical maximum alongside the primary
+  /// needle.
+  ///
+  /// Defaults to an empty list (no extra needles).
+  final List<GaugePointer> extraPointers;
+
+  /// Accessibility label announced by screen readers instead of the default
+  /// `'Radial gauge'` string.
+  ///
+  /// When `null` the render object uses `'Radial gauge'` as the label and
+  /// the formatted [controller] value as the semantic value.
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -211,6 +312,8 @@ class RadialGauge extends LeafRenderObjectWidget {
       showCenterLabel: showCenterLabel,
       centerLabel: centerLabel,
       centerLabelStyle: centerLabelStyle,
+      extraPointers: extraPointers,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -231,6 +334,8 @@ class RadialGauge extends LeafRenderObjectWidget {
       ..onChanged = onChanged
       ..showCenterLabel = showCenterLabel
       ..centerLabel = centerLabel
-      ..centerLabelStyle = centerLabelStyle;
+      ..centerLabelStyle = centerLabelStyle
+      ..extraPointers = extraPointers
+      ..semanticsLabel = semanticsLabel;
   }
 }

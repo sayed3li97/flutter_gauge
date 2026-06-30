@@ -19,6 +19,7 @@ class TapeGauge extends LeafRenderObjectWidget {
     this.vertical = true,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Altimeter preset (0–10000 ft).
@@ -69,6 +70,7 @@ class TapeGauge extends LeafRenderObjectWidget {
   final bool vertical;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -87,6 +89,7 @@ class TapeGauge extends LeafRenderObjectWidget {
       tickInterval: tickInterval,
       unit: unit,
       vertical: vertical,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -97,6 +100,7 @@ class TapeGauge extends LeafRenderObjectWidget {
       ..tokens = _resolve(context)
       ..min = min
       ..max = max
-      ..tickInterval = tickInterval;
+      ..tickInterval = tickInterval
+      ..semanticsLabel = semanticsLabel;
   }
 }

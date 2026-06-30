@@ -17,12 +17,14 @@ class ThermometerGaugeRenderBox extends RenderBox {
     required double maxCelsius,
     required TemperatureScale scale,
     required bool showScale,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _minCelsius = minCelsius,
         _maxCelsius = maxCelsius,
         _scale = scale,
-        _showScale = showScale {
+        _showScale = showScale,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -32,6 +34,7 @@ class ThermometerGaugeRenderBox extends RenderBox {
   final double _maxCelsius;
   TemperatureScale _scale;
   final bool _showScale;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -39,7 +42,15 @@ class ThermometerGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -53,6 +64,15 @@ class ThermometerGaugeRenderBox extends RenderBox {
     _scale = v;
     _staticPicture = null;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Thermometer'
+      ..value = _controller.value.toStringAsFixed(1)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

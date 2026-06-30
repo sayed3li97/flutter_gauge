@@ -22,6 +22,7 @@ class LinearGauge extends LeafRenderObjectWidget {
     this.showTicks = true,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Horizontal progress bar preset.
@@ -77,6 +78,7 @@ class LinearGauge extends LeafRenderObjectWidget {
   final bool showTicks;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -97,6 +99,7 @@ class LinearGauge extends LeafRenderObjectWidget {
       majorDivisions: majorDivisions,
       showLabels: showLabels,
       showTicks: showTicks,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -112,6 +115,7 @@ class LinearGauge extends LeafRenderObjectWidget {
       ..ranges = ranges
       ..majorDivisions = majorDivisions
       ..showLabels = showLabels
-      ..showTicks = showTicks;
+      ..showTicks = showTicks
+      ..semanticsLabel = semanticsLabel;
   }
 }

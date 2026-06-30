@@ -22,6 +22,7 @@ class ArcGauge extends LeafRenderObjectWidget {
     this.ranges = const [],
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Download/upload speed preset (0–100 Mbps).
@@ -72,6 +73,7 @@ class ArcGauge extends LeafRenderObjectWidget {
   final List<GaugeRange> ranges;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -92,6 +94,7 @@ class ArcGauge extends LeafRenderObjectWidget {
       centerLabel: centerLabel,
       centerLabelStyle: centerLabelStyle,
       ranges: ranges,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -102,6 +105,7 @@ class ArcGauge extends LeafRenderObjectWidget {
       ..centerLabel = centerLabel
       ..ranges = ranges
       ..min = min
-      ..max = max;
+      ..max = max
+      ..semanticsLabel = semanticsLabel;
   }
 }

@@ -18,6 +18,7 @@ class BulletGaugeRenderBox extends RenderBox {
     required double poorThreshold,
     required double satisfactoryThreshold,
     required String? label,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -25,7 +26,8 @@ class BulletGaugeRenderBox extends RenderBox {
         _targetValue = targetValue,
         _poorThreshold = poorThreshold,
         _satisfactoryThreshold = satisfactoryThreshold,
-        _label = label {
+        _label = label,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -37,6 +39,7 @@ class BulletGaugeRenderBox extends RenderBox {
   final double _poorThreshold;
   final double _satisfactoryThreshold;
   final String? _label;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -44,7 +47,15 @@ class BulletGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -70,6 +81,15 @@ class BulletGaugeRenderBox extends RenderBox {
     _max = v;
     _staticPicture = null;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Bullet gauge'
+      ..value = _controller.value.toStringAsFixed(1)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

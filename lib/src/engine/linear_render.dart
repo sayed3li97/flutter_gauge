@@ -21,6 +21,7 @@ class LinearGaugeRenderBox extends RenderBox {
     required int majorDivisions,
     required bool showLabels,
     required bool showTicks,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -29,7 +30,8 @@ class LinearGaugeRenderBox extends RenderBox {
         _ranges = ranges,
         _majorDivisions = majorDivisions,
         _showLabels = showLabels,
-        _showTicks = showTicks {
+        _showTicks = showTicks,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -42,6 +44,7 @@ class LinearGaugeRenderBox extends RenderBox {
   int _majorDivisions;
   bool _showLabels;
   bool _showTicks;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -49,7 +52,15 @@ class LinearGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -104,6 +115,15 @@ class LinearGaugeRenderBox extends RenderBox {
     _showTicks = v;
     _staticPicture = null;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Linear gauge'
+      ..value = _controller.value.toStringAsFixed(1)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

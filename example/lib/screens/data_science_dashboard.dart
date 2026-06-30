@@ -402,7 +402,7 @@ class _DataScienceDashboardScreenState
                       builder: (_, __) => SizedBox(
                         width: 56,
                         child: Text(
-                          '${(_lrCtrl.value * 0.001).toStringAsFixed(4)}',
+                          (_lrCtrl.value * 0.001).toStringAsFixed(4),
                           style: const TextStyle(
                             color: _amber,
                             fontSize: 10,

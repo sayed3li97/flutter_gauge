@@ -13,12 +13,14 @@ class LevelMeterGaugeRenderBox extends RenderBox {
     required double max,
     required int channelCount,
     required double gap,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
         _max = max,
         _channelCount = channelCount,
-        _gap = gap {
+        _gap = gap,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -28,11 +30,20 @@ class LevelMeterGaugeRenderBox extends RenderBox {
   double _max;
   int _channelCount;
   final double _gap;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -56,6 +67,15 @@ class LevelMeterGaugeRenderBox extends RenderBox {
     if (_channelCount == v) return;
     _channelCount = v;
     markNeedsLayout();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Level meter'
+      ..value = _controller.value.toStringAsFixed(0)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

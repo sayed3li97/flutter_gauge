@@ -20,6 +20,7 @@ class ArcGaugeRenderBox extends RenderBox {
     required String? centerLabel,
     required TextStyle? centerLabelStyle,
     List<GaugeRange> ranges = const [],
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -28,7 +29,8 @@ class ArcGaugeRenderBox extends RenderBox {
         _sweepAngleDeg = sweepAngleDeg,
         _centerLabel = centerLabel,
         _centerLabelStyle = centerLabelStyle,
-        _ranges = ranges {
+        _ranges = ranges,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -41,6 +43,7 @@ class ArcGaugeRenderBox extends RenderBox {
   String? _centerLabel;
   final TextStyle? _centerLabelStyle;
   List<GaugeRange> _ranges;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -48,7 +51,15 @@ class ArcGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -80,6 +91,15 @@ class ArcGaugeRenderBox extends RenderBox {
     _max = v;
     _staticPicture = null;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Arc gauge'
+      ..value = '${_controller.value.toStringAsFixed(1)}%'
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

@@ -19,6 +19,7 @@ class SegmentedGauge extends LeafRenderObjectWidget {
     this.gap = 2,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Signal-strength preset (5 bars).
@@ -69,6 +70,7 @@ class SegmentedGauge extends LeafRenderObjectWidget {
   final double gap;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -87,6 +89,7 @@ class SegmentedGauge extends LeafRenderObjectWidget {
       segmentCount: segmentCount,
       horizontal: horizontal,
       gap: gap,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -97,6 +100,7 @@ class SegmentedGauge extends LeafRenderObjectWidget {
       ..tokens = _resolve(context)
       ..segmentCount = segmentCount
       ..min = min
-      ..max = max;
+      ..max = max
+      ..semanticsLabel = semanticsLabel;
   }
 }

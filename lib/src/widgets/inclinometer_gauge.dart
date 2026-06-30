@@ -15,12 +15,14 @@ class InclinometerGauge extends LeafRenderObjectWidget {
     this.maxAngle = 45,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   final GaugeController controller;
   final double maxAngle;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -35,6 +37,7 @@ class InclinometerGauge extends LeafRenderObjectWidget {
       controller: controller,
       tokens: _resolve(context),
       maxAngle: maxAngle,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -43,6 +46,7 @@ class InclinometerGauge extends LeafRenderObjectWidget {
       BuildContext context, InclinometerGaugeRenderBox renderObject) {
     renderObject
       ..tokens = _resolve(context)
-      ..maxAngle = maxAngle;
+      ..maxAngle = maxAngle
+      ..semanticsLabel = semanticsLabel;
   }
 }

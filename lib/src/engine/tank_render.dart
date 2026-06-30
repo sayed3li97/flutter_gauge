@@ -13,11 +13,13 @@ class TankGaugeRenderBox extends RenderBox {
     required double max,
     required bool vertical,
     bool showWave = false,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
         _max = max,
-        _vertical = vertical {
+        _vertical = vertical,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -26,11 +28,20 @@ class TankGaugeRenderBox extends RenderBox {
   double _min;
   double _max;
   final bool _vertical;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -48,6 +59,15 @@ class TankGaugeRenderBox extends RenderBox {
     if (_max == v) return;
     _max = v;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Tank gauge'
+      ..value = '${_controller.value.toStringAsFixed(0)}%'
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

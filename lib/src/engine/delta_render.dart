@@ -17,12 +17,14 @@ class DeltaGaugeRenderBox extends RenderBox {
     required double min,
     required double max,
     required String? unit,
+    required bool lowerIsBetter,
   })  : _controller = controller,
         _tokens = tokens,
         _baseline = baseline,
         _min = min,
         _max = max,
-        _unit = unit {
+        _unit = unit,
+        _lowerIsBetter = lowerIsBetter {
     _controller.addListener(_onValueChanged);
   }
 
@@ -32,6 +34,7 @@ class DeltaGaugeRenderBox extends RenderBox {
   double _min;
   double _max;
   final String? _unit;
+  bool _lowerIsBetter;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -39,7 +42,10 @@ class DeltaGaugeRenderBox extends RenderBox {
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -66,6 +72,12 @@ class DeltaGaugeRenderBox extends RenderBox {
     if (_max == v) return;
     _max = v;
     _staticPicture = null;
+    markNeedsPaint();
+  }
+
+  set lowerIsBetter(bool v) {
+    if (_lowerIsBetter == v) return;
+    _lowerIsBetter = v;
     markNeedsPaint();
   }
 
@@ -119,8 +131,8 @@ class DeltaGaugeRenderBox extends RenderBox {
 
     // Delta bar
     final delta = _controller.value - _baseline;
-    final barColor =
-        delta >= 0 ? _tokens.zoneNormal : _tokens.zoneDanger;
+    final isImprovement = _lowerIsBetter ? delta <= 0 : delta >= 0;
+    final barColor = isImprovement ? _tokens.zoneNormal : _tokens.zoneDanger;
     canvas.drawLine(
       Offset(bx, cy),
       Offset(vx, cy),
@@ -155,6 +167,17 @@ class DeltaGaugeRenderBox extends RenderBox {
   String _fmt(double v) {
     if (v == v.truncateToDouble()) return v.truncate().toString();
     return v.toStringAsFixed(1);
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    final delta = _controller.value - _baseline;
+    final sign = delta >= 0 ? '+' : '';
+    config
+      ..label = 'Delta gauge'
+      ..value = '$sign${delta.toStringAsFixed(1)}${_unit != null ? " $_unit" : ""}'
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

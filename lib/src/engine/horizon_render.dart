@@ -12,9 +12,11 @@ class HorizonGaugeRenderBox extends RenderBox {
     required GaugeController pitchController,
     required GaugeController rollController,
     required HorizonGaugeTokens tokens,
+    String? semanticsLabel,
   })  : _pitchController = pitchController,
         _rollController = rollController,
-        _tokens = tokens {
+        _tokens = tokens,
+        _semanticsLabel = semanticsLabel {
     _pitchController.addListener(_onValueChanged);
     _rollController.addListener(_onValueChanged);
   }
@@ -22,11 +24,20 @@ class HorizonGaugeRenderBox extends RenderBox {
   final GaugeController _pitchController;
   final GaugeController _rollController;
   HorizonGaugeTokens _tokens;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(HorizonGaugeTokens v) {
     if (_tokens == v) return;
@@ -184,6 +195,16 @@ class HorizonGaugeRenderBox extends RenderBox {
         ..strokeWidth = 2.5
         ..strokeCap = StrokeCap.round,
     );
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Artificial horizon'
+      ..value =
+          'pitch ${_pitchController.value.toStringAsFixed(1)}°, roll ${_rollController.value.toStringAsFixed(1)}°'
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

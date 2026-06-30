@@ -12,11 +12,13 @@ class OdometerGaugeRenderBox extends RenderBox {
     required int digitCount,
     required int decimalDigits,
     required String? unit,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _digitCount = digitCount,
         _decimalDigits = decimalDigits,
-        _unit = unit {
+        _unit = unit,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -25,11 +27,20 @@ class OdometerGaugeRenderBox extends RenderBox {
   int _digitCount;
   int _decimalDigits;
   String? _unit;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -56,6 +67,15 @@ class OdometerGaugeRenderBox extends RenderBox {
 
   static const double _digitW = 22.0;
   static const double _digitH = 36.0;
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Odometer'
+      ..value = _controller.value.toStringAsFixed(0)
+      ..textDirection = TextDirection.ltr;
+  }
 
   @override
   void performLayout() {

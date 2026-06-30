@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 
 import '../core/gauge_controller.dart';
+import '../core/gauge_pointer.dart';
 import '../core/gauge_range.dart';
 import '../core/value_to_angle.dart';
 import '../styles/gauge_tokens.dart';
@@ -27,6 +28,8 @@ class RadialGaugeRenderBox extends RenderBox {
     bool showCenterLabel = false,
     String? centerLabel,
     TextStyle? centerLabelStyle,
+    List<GaugePointer> extraPointers = const [],
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -42,8 +45,13 @@ class RadialGaugeRenderBox extends RenderBox {
         _onChanged = onChanged,
         _showCenterLabel = showCenterLabel,
         _centerLabel = centerLabel,
-        _centerLabelStyle = centerLabelStyle {
+        _centerLabelStyle = centerLabelStyle,
+        _extraPointers = extraPointers,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
+    for (final pointer in _extraPointers) {
+      pointer.controller.addListener(_onValueChanged);
+    }
   }
 
   final GaugeController _controller;
@@ -62,6 +70,8 @@ class RadialGaugeRenderBox extends RenderBox {
   bool _showCenterLabel;
   String? _centerLabel;
   TextStyle? _centerLabelStyle;
+  List<GaugePointer> _extraPointers;
+  String? _semanticsLabel;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -72,7 +82,10 @@ class RadialGaugeRenderBox extends RenderBox {
   @override
   bool get sizedByParent => false;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
 
   // Setters that invalidate static picture when structural props change.
   set tokens(GaugeTokens v) {
@@ -153,6 +166,25 @@ class RadialGaugeRenderBox extends RenderBox {
   set centerLabelStyle(TextStyle? v) {
     _centerLabelStyle = v;
     markNeedsPaint();
+  }
+
+  set extraPointers(List<GaugePointer> v) {
+    // Remove listeners from old pointers.
+    for (final pointer in _extraPointers) {
+      pointer.controller.removeListener(_onValueChanged);
+    }
+    _extraPointers = v;
+    // Add listeners to new pointers.
+    for (final pointer in _extraPointers) {
+      pointer.controller.addListener(_onValueChanged);
+    }
+    markNeedsPaint();
+  }
+
+  set semanticsLabel(String? v) {
+    if (_semanticsLabel == v) return;
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
   }
 
   @override
@@ -334,6 +366,13 @@ class RadialGaugeRenderBox extends RenderBox {
       _paintNeedle(canvas, center, radius, valueAngle);
     }
 
+    // Extra pointers — drawn after the main needle so they appear on top.
+    for (final pointer in _extraPointers) {
+      final pointerAngle =
+          valueToAngle(pointer.controller.value, _min, _max, startRad, sweepRad);
+      _paintExtraNeedle(canvas, center, radius, pointerAngle, pointer, _tokens);
+    }
+
     // Center label — painted via PictureRecorder so text renders correctly in CanvasKit
     if (_showCenterLabel) {
       final labelText = _centerLabel ?? _formatLabel(_controller.value);
@@ -404,9 +443,57 @@ class RadialGaugeRenderBox extends RenderBox {
     }
   }
 
+  void _paintExtraNeedle(
+    Canvas canvas,
+    Offset center,
+    double radius,
+    double valueAngle,
+    GaugePointer pointer,
+    GaugeTokens tokens,
+  ) {
+    final cos = math.cos(valueAngle);
+    final sin = math.sin(valueAngle);
+    final needleColor =
+        pointer.color ?? tokens.needleColor.withValues(alpha: 0.7);
+    final strokeWidth = pointer.strokeWidth ?? tokens.needleWidth * 0.8;
+    final tipRadius = radius * pointer.lengthFraction;
+
+    final needlePaint = Paint()
+      ..color = needleColor
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      center,
+      Offset(center.dx + cos * tipRadius, center.dy + sin * tipRadius),
+      needlePaint,
+    );
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Radial gauge'
+      ..value = _formatLabel(_controller.value)
+      ..isEnabled = _interactive
+      ..textDirection = TextDirection.ltr;
+    if (_interactive) {
+      final step = (_max - _min) / 10;
+      config.onIncrease = () {
+        _onChanged?.call((_controller.value + step).clamp(_min, _max));
+      };
+      config.onDecrease = () {
+        _onChanged?.call((_controller.value - step).clamp(_min, _max));
+      };
+    }
+  }
+
   @override
   void dispose() {
     _controller.removeListener(_onValueChanged);
+    for (final pointer in _extraPointers) {
+      pointer.controller.removeListener(_onValueChanged);
+    }
     super.dispose();
   }
 }

@@ -17,6 +17,7 @@ class OdometerGauge extends LeafRenderObjectWidget {
     this.unit,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Mileage / distance preset.
@@ -44,6 +45,7 @@ class OdometerGauge extends LeafRenderObjectWidget {
   final String? unit;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -60,6 +62,7 @@ class OdometerGauge extends LeafRenderObjectWidget {
       digitCount: digitCount,
       decimalDigits: decimalDigits,
       unit: unit,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -70,6 +73,7 @@ class OdometerGauge extends LeafRenderObjectWidget {
       ..tokens = _resolve(context)
       ..digitCount = digitCount
       ..decimalDigits = decimalDigits
-      ..unit = unit;
+      ..unit = unit
+      ..semanticsLabel = semanticsLabel;
   }
 }

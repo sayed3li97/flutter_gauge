@@ -14,13 +14,15 @@ class SegmentedGaugeRenderBox extends RenderBox {
     required int segmentCount,
     required bool horizontal,
     required double gap,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
         _max = max,
         _segmentCount = segmentCount,
         _horizontal = horizontal,
-        _gap = gap {
+        _gap = gap,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -31,11 +33,20 @@ class SegmentedGaugeRenderBox extends RenderBox {
   int _segmentCount;
   final bool _horizontal;
   final double _gap;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -59,6 +70,15 @@ class SegmentedGaugeRenderBox extends RenderBox {
     if (_max == v) return;
     _max = v;
     markNeedsPaint();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Segmented gauge'
+      ..value = _controller.value.toStringAsFixed(0)
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

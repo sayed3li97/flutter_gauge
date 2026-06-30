@@ -15,6 +15,7 @@ export 'src/core/gauge_tick_style.dart';
 export 'src/core/gauge_label_style.dart';
 export 'src/core/unit_converter.dart';
 export 'src/core/value_to_angle.dart';
+export 'src/core/gauge_pointer.dart';
 
 // Styles
 export 'src/styles/gauge_style.dart';
@@ -25,21 +26,8 @@ export 'src/styles/built_in/material_style.dart';
 export 'src/styles/built_in/cupertino_style.dart';
 export 'src/styles/built_in/executive_style.dart';
 
-// Engine (internal — exported for advanced custom rendering)
-export 'src/engine/radial_render.dart';
-export 'src/engine/linear_render.dart';
-export 'src/engine/segmented_render.dart';
-export 'src/engine/arc_render.dart';
-export 'src/engine/thermometer_render.dart';
-export 'src/engine/bullet_render.dart';
-export 'src/engine/tank_render.dart';
-export 'src/engine/inclinometer_render.dart';
-export 'src/engine/status_render.dart';
-export 'src/engine/delta_render.dart';
-export 'src/engine/horizon_render.dart';
-export 'src/engine/odometer_render.dart';
-export 'src/engine/level_meter_render.dart';
-export 'src/engine/tape_render.dart';
+// For direct access to RenderBox subclasses (advanced use):
+// import 'package:gauge_kit/gauge_kit_rendering.dart';
 
 // Widgets
 export 'src/widgets/radial_gauge.dart';

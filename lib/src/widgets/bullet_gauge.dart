@@ -20,6 +20,7 @@ class BulletGauge extends LeafRenderObjectWidget {
     this.label,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// KPI preset: target line at 80% of max.
@@ -54,6 +55,7 @@ class BulletGauge extends LeafRenderObjectWidget {
   final String? label;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -73,6 +75,7 @@ class BulletGauge extends LeafRenderObjectWidget {
       poorThreshold: poorThreshold,
       satisfactoryThreshold: satisfactoryThreshold,
       label: label,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -83,6 +86,7 @@ class BulletGauge extends LeafRenderObjectWidget {
       ..tokens = _resolve(context)
       ..targetValue = targetValue
       ..min = min
-      ..max = max;
+      ..max = max
+      ..semanticsLabel = semanticsLabel;
   }
 }

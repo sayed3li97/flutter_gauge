@@ -12,10 +12,12 @@ class StatusGaugeRenderBox extends RenderBox {
     required GaugeTokens tokens,
     required double radius,
     required String? label,
+    String? semanticsLabel,
   })  : _controller = controller,
         _tokens = tokens,
         _radius = radius,
-        _label = label {
+        _label = label,
+        _semanticsLabel = semanticsLabel {
     _controller.addListener(_onValueChanged);
   }
 
@@ -23,11 +25,20 @@ class StatusGaugeRenderBox extends RenderBox {
   GaugeTokens _tokens;
   double _radius;
   String? _label;
+  String? _semanticsLabel;
 
   @override
   bool get isRepaintBoundary => true;
 
-  void _onValueChanged() => markNeedsPaint();
+  void _onValueChanged() {
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
+
+  set semanticsLabel(String? v) {
+    _semanticsLabel = v;
+    markNeedsSemanticsUpdate();
+  }
 
   set tokens(GaugeTokens v) {
     if (_tokens == v) return;
@@ -44,6 +55,22 @@ class StatusGaugeRenderBox extends RenderBox {
   set label(String? v) {
     _label = v;
     markNeedsPaint();
+  }
+
+  String get _statusValue {
+    final v = _controller.value;
+    if (v == 0) return 'Normal';
+    if (v == 1) return 'Warning';
+    return 'Danger';
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..label = _semanticsLabel ?? 'Status indicator'
+      ..value = _statusValue
+      ..textDirection = TextDirection.ltr;
   }
 
   @override

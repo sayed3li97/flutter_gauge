@@ -18,6 +18,7 @@ class TankGauge extends LeafRenderObjectWidget {
     this.showWave = false,
     this.style,
     this.mode,
+    this.semanticsLabel,
   });
 
   /// Water level preset.
@@ -45,6 +46,7 @@ class TankGauge extends LeafRenderObjectWidget {
   final bool showWave;
   final GaugeStyle? style;
   final GaugeMode? mode;
+  final String? semanticsLabel;
 
   GaugeTokens _resolve(BuildContext context) {
     final ext = Theme.of(context).extension<GaugeThemeExtension>();
@@ -62,6 +64,7 @@ class TankGauge extends LeafRenderObjectWidget {
       max: max,
       vertical: vertical,
       showWave: showWave,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -71,6 +74,7 @@ class TankGauge extends LeafRenderObjectWidget {
     renderObject
       ..tokens = _resolve(context)
       ..min = min
-      ..max = max;
+      ..max = max
+      ..semanticsLabel = semanticsLabel;
   }
 }
