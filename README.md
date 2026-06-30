@@ -18,35 +18,35 @@ screen simultaneously.
 ## Gallery
 
 ### Car Dashboard
-![Car Dashboard](docs/screenshots/car.png)
+![Car Dashboard](doc/screenshots/car.png)
 *RadialGauge (speedometer, tachometer, fuel), OdometerGauge, ArcGauge — Executive style*
 
 ### Flight Instruments
-![Flight Dashboard](docs/screenshots/flight.png)
+![Flight Dashboard](doc/screenshots/flight.png)
 *ArtificialHorizonGauge, TapeGauge (airspeed, altitude), RadialGauge (heading), InclinometerGauge — Executive style*
 
 ### Weather Station
-![Weather Dashboard](docs/screenshots/weather.png)
+![Weather Dashboard](doc/screenshots/weather.png)
 *ThermometerGauge, RadialGauge (compass), LinearGauge, ArcGauge — Executive style*
 
 ### Audio Mixer
-![Audio Dashboard](docs/screenshots/audio.png)
+![Audio Dashboard](doc/screenshots/audio.png)
 *LevelMeterGauge, LinearGauge, SegmentedGauge — Executive style*
 
 ### Server Monitor
-![Server Dashboard](docs/screenshots/server.png)
+![Server Dashboard](doc/screenshots/server.png)
 *ArcGauge (CPU, memory, disk), BulletGauge, StatusGauge, DeltaGauge — Executive style*
 
 ### Submarine Control
-![Submarine Dashboard](docs/screenshots/sub.png)
+![Submarine Dashboard](doc/screenshots/sub.png)
 *TankGauge, InclinometerGauge, RadialGauge, TapeGauge — Executive style*
 
 ### ML / Data Science
-![ML Dashboard](docs/screenshots/ml.png)
+![ML Dashboard](doc/screenshots/ml.png)
 *BulletGauge, DeltaGauge, ArcGauge, SegmentedGauge — Executive style*
 
 ### Smart Home v0.3
-![Smart Home](docs/screenshots/smarthome.png)
+![Smart Home](doc/screenshots/smarthome.png)
 *ArcGauge, RadialGauge, LinearGauge with annotations, child overlays, glow effects*
 
 ---
@@ -175,7 +175,7 @@ A circular gauge with a sweeping needle, tick marks, labels, colored ranges, and
 overlay widgets. Supports multiple pointers, annotations pinned at specific arc positions,
 and full drag-to-set interaction.
 
-![Car Dashboard](docs/screenshots/car.png)
+![Car Dashboard](doc/screenshots/car.png)
 
 ```dart
 RadialGauge(
@@ -250,7 +250,7 @@ A compact arc ring gauge ideal for KPI tiles, CPU/memory rings, and smart home d
 Supports a `child` center overlay, `header`/`footer` widgets, glow effects, and a
 `widgetIndicator` that tracks the arc tip.
 
-![Smart Home](docs/screenshots/smarthome.png)
+![Smart Home](doc/screenshots/smarthome.png)
 
 ```dart
 ArcGauge(
@@ -311,7 +311,7 @@ ArcGauge.cpuUsage(controller: ctrl)
 A horizontal or vertical bar gauge with optional ticks, labels, leading/trailing widgets,
 a floating center overlay, and a `widgetIndicator` that slides with the fill.
 
-![Weather Dashboard](docs/screenshots/weather.png)
+![Weather Dashboard](doc/screenshots/weather.png)
 
 ```dart
 LinearGauge(
@@ -374,7 +374,7 @@ LinearGauge.volume(controller: ctrl)
 A discrete LED-style bar gauge made of evenly-spaced segments. Great for signal
 strength indicators, battery levels, and audio clip meters.
 
-![Audio Dashboard](docs/screenshots/audio.png)
+![Audio Dashboard](doc/screenshots/audio.png)
 
 ```dart
 SegmentedGauge(
@@ -419,7 +419,7 @@ A Stephen Few-style bullet chart for KPI comparisons. Shows a performance bar
 against qualitative background zones (poor / satisfactory / good) and an optional
 target marker line.
 
-![Server Dashboard](docs/screenshots/server.png)
+![Server Dashboard](doc/screenshots/server.png)
 
 ```dart
 BulletGauge(
@@ -463,7 +463,7 @@ A change-from-baseline gauge that shows positive and negative deviations with
 color-coded arrows. Includes a `lowerIsBetter` flag to invert the color semantics for
 loss functions, error rates, and lap times.
 
-![ML Dashboard](docs/screenshots/ml.png)
+![ML Dashboard](doc/screenshots/ml.png)
 
 ```dart
 DeltaGauge(
@@ -562,7 +562,7 @@ ThermometerGauge.bodyTemp(controller: ctrl)
 A liquid-tank fill gauge with optional animated wave surface. Supports both vertical
 and horizontal orientations.
 
-![Submarine Dashboard](docs/screenshots/sub.png)
+![Submarine Dashboard](doc/screenshots/sub.png)
 
 ```dart
 TankGauge(
@@ -600,7 +600,7 @@ TankGauge.water(controller: ctrl)
 A scrolling tape gauge in the style of aviation altimeters and airspeed indicators.
 Supports both vertical and horizontal scroll directions.
 
-![Flight Dashboard](docs/screenshots/flight.png)
+![Flight Dashboard](doc/screenshots/flight.png)
 
 ```dart
 TapeGauge(
@@ -673,7 +673,7 @@ OdometerGauge.mileage(controller: ctrl)  // 6 digits, 1 decimal, unit = km
 
 A multi-channel vertical VU / level meter — common in audio and broadcast applications.
 
-![Audio Dashboard](docs/screenshots/audio.png)
+![Audio Dashboard](doc/screenshots/audio.png)
 
 ```dart
 LevelMeterGauge(
@@ -711,7 +711,7 @@ LevelMeterGauge.stereo(controller: ctrl)  // 2 channels, 0–100, 4 px gap
 A spirit-level / tilt gauge that shows angular deviation from horizontal. Used for
 pitch/roll indicators and bubble levels.
 
-![Submarine Dashboard](docs/screenshots/sub.png)
+![Submarine Dashboard](doc/screenshots/sub.png)
 
 ```dart
 InclinometerGauge(
@@ -737,7 +737,7 @@ InclinometerGauge(
 A full AHRS attitude indicator with sky/ground fill, pitch-ladder lines, roll-arc
 bezel, and a fixed aircraft symbol. Requires two controllers: one for pitch, one for roll.
 
-![Flight Dashboard](docs/screenshots/flight.png)
+![Flight Dashboard](doc/screenshots/flight.png)
 
 ```dart
 ArtificialHorizonGauge(
