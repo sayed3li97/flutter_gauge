@@ -34,6 +34,8 @@ class GaugeTokens {
     this.valueColor = const Color(0xFF6750A4),
     this.valueStrokeWidth = 10.0,
     this.valueGradient,
+    this.valueGlowRadius = 0.0,
+    this.valueGlowColor,
     this.needleColor = const Color(0xFF6750A4),
     this.needleWidth = 3.0,
     this.needleTipStyle = NeedleTipStyle.sharp,
@@ -117,6 +119,16 @@ class GaugeTokens {
   /// When non-null this overrides [valueColor].
   /// Defaults to `null`.
   final Gradient? valueGradient;
+
+  /// Blur radius of the outer glow painted behind the value arc or bar.
+  ///
+  /// Set to `0.0` (the default) to disable the glow effect.
+  /// Typical values: 6–20 logical pixels.
+  final double valueGlowRadius;
+
+  /// Colour of the outer glow. Falls back to [valueColor] at 50 % opacity
+  /// when `null` and [valueGlowRadius] is positive.
+  final Color? valueGlowColor;
 
   // -------------------------------------------------------------------------
   // Needle
@@ -270,6 +282,8 @@ class GaugeTokens {
     Color? valueColor,
     double? valueStrokeWidth,
     Gradient? valueGradient,
+    double? valueGlowRadius,
+    Color? valueGlowColor,
     Color? needleColor,
     double? needleWidth,
     NeedleTipStyle? needleTipStyle,
@@ -299,6 +313,8 @@ class GaugeTokens {
       valueColor: valueColor ?? this.valueColor,
       valueStrokeWidth: valueStrokeWidth ?? this.valueStrokeWidth,
       valueGradient: valueGradient ?? this.valueGradient,
+      valueGlowRadius: valueGlowRadius ?? this.valueGlowRadius,
+      valueGlowColor: valueGlowColor ?? this.valueGlowColor,
       needleColor: needleColor ?? this.needleColor,
       needleWidth: needleWidth ?? this.needleWidth,
       needleTipStyle: needleTipStyle ?? this.needleTipStyle,
@@ -335,6 +351,8 @@ class GaugeTokens {
       valueColor: Color.lerp(a.valueColor, b.valueColor, t)!,
       valueStrokeWidth: _lerpDouble(a.valueStrokeWidth, b.valueStrokeWidth, t),
       valueGradient: t < 0.5 ? a.valueGradient : b.valueGradient,
+      valueGlowRadius: _lerpDouble(a.valueGlowRadius, b.valueGlowRadius, t),
+      valueGlowColor: Color.lerp(a.valueGlowColor, b.valueGlowColor, t),
       needleColor: Color.lerp(a.needleColor, b.needleColor, t)!,
       needleWidth: _lerpDouble(a.needleWidth, b.needleWidth, t),
       needleTipStyle: t < 0.5 ? a.needleTipStyle : b.needleTipStyle,
@@ -393,6 +411,8 @@ class HorizonGaugeTokens extends GaugeTokens {
     super.valueColor,
     super.valueStrokeWidth,
     super.valueGradient,
+    super.valueGlowRadius,
+    super.valueGlowColor,
     super.needleColor,
     super.needleWidth,
     super.needleTipStyle,

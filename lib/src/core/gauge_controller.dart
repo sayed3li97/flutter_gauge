@@ -53,6 +53,7 @@ class GaugeController extends ChangeNotifier {
     double target, {
     Duration duration = const Duration(milliseconds: 600),
     Curve curve = Curves.easeInOut,
+    VoidCallback? onAnimationEnd,
   }) {
     _ticker?.dispose();
     _ticker = null;
@@ -65,7 +66,10 @@ class GaugeController extends ChangeNotifier {
       if (t >= 1.0) {
         _ticker?.dispose();
         _ticker = null;
-        if (!completer.isCompleted) completer.complete();
+        if (!completer.isCompleted) {
+          completer.complete();
+          onAnimationEnd?.call();
+        }
       }
     })..start();
     return completer.future;

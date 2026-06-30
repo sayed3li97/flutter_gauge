@@ -16,6 +16,7 @@ export 'src/core/gauge_label_style.dart';
 export 'src/core/unit_converter.dart';
 export 'src/core/value_to_angle.dart';
 export 'src/core/gauge_pointer.dart';
+export 'src/core/gauge_annotation.dart';
 
 // Styles
 export 'src/styles/gauge_style.dart';

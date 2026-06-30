@@ -1,3 +1,26 @@
+## 0.3.0
+
+- `GaugeAnnotation` — new class for pinning arbitrary Flutter widgets at specific value
+  positions around the `RadialGauge` arc. Supports `radiusFraction` and `offset` for
+  precise placement.
+- `RadialGauge` — converted to `StatelessWidget` wrapper supporting `child` (centre
+  overlay), `annotations` (`List<GaugeAnnotation>`), `labelFormatter` (custom tick
+  text), and `unitText` (centre value suffix).
+- `ArcGauge` — converted to `StatelessWidget` wrapper with a full new layout tier:
+  `child` (centre overlay), `header` / `footer` labels, `fillColor` (inner circle),
+  `widgetIndicator` (moving tip widget), `reverse` (fill from far end), `showValue`,
+  `unitText`, and `backgroundWidth` (override track stroke width).
+- `LinearGauge` — converted to `StatelessWidget` wrapper with `leading` / `trailing`
+  end widgets, `center` overlay, `widgetIndicator` (moving tip widget), `reverse`,
+  `showValue`, `unitText`, `labelFormatter`, and `barRadius` (rounded filled-bar mode).
+- Glow effects — `GaugeTokens.valueGlowRadius` (`double`, default `0.0`) and
+  `GaugeTokens.valueGlowColor` (`Color?`) added to all arc/linear render engines;
+  positive radius renders a soft outer glow behind the value arc or bar.
+- `GaugeController.animateTo()` — new `onAnimationEnd` callback fires when the
+  animation completes.
+- All new params are optional with sensible defaults — existing code requires zero
+  changes.
+
 ## 0.2.0
 
 - `GaugeController.animateTo()` — new self-contained animation API; no external

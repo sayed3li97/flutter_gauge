@@ -30,6 +30,8 @@ class RadialGaugeRenderBox extends RenderBox {
     TextStyle? centerLabelStyle,
     List<GaugePointer> extraPointers = const [],
     String? semanticsLabel,
+    String Function(double)? labelFormatter,
+    String? unitText,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -47,7 +49,9 @@ class RadialGaugeRenderBox extends RenderBox {
         _centerLabel = centerLabel,
         _centerLabelStyle = centerLabelStyle,
         _extraPointers = extraPointers,
-        _semanticsLabel = semanticsLabel {
+        _semanticsLabel = semanticsLabel,
+        _labelFormatter = labelFormatter,
+        _unitText = unitText {
     _controller.addListener(_onValueChanged);
     for (final pointer in _extraPointers) {
       pointer.controller.addListener(_onValueChanged);
@@ -72,6 +76,8 @@ class RadialGaugeRenderBox extends RenderBox {
   TextStyle? _centerLabelStyle;
   List<GaugePointer> _extraPointers;
   String? _semanticsLabel;
+  String Function(double)? _labelFormatter;
+  String? _unitText;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -185,6 +191,18 @@ class RadialGaugeRenderBox extends RenderBox {
     if (_semanticsLabel == v) return;
     _semanticsLabel = v;
     markNeedsSemanticsUpdate();
+  }
+
+  set labelFormatter(String Function(double)? v) {
+    _labelFormatter = v;
+    _staticPicture = null;
+    markNeedsPaint();
+  }
+
+  set unitText(String? v) {
+    if (_unitText == v) return;
+    _unitText = v;
+    markNeedsPaint();
   }
 
   @override
@@ -314,10 +332,14 @@ class RadialGaugeRenderBox extends RenderBox {
   }
 
   String _formatLabel(double value) {
-    if (value == value.truncateToDouble()) {
-      return value.truncate().toString();
-    }
+    if (_labelFormatter != null) return _labelFormatter!(value);
+    if (value == value.truncateToDouble()) return value.truncate().toString();
     return value.toStringAsFixed(1);
+  }
+
+  String _formatCenter(double value) {
+    final s = _formatLabel(value);
+    return _unitText != null ? '$s $_unitText' : s;
   }
 
   @override
@@ -375,7 +397,7 @@ class RadialGaugeRenderBox extends RenderBox {
 
     // Center label — painted via PictureRecorder so text renders correctly in CanvasKit
     if (_showCenterLabel) {
-      final labelText = _centerLabel ?? _formatLabel(_controller.value);
+      final labelText = _centerLabel ?? _formatCenter(_controller.value);
       final tp = TextPainter(
         text: TextSpan(
           text: labelText,
@@ -474,7 +496,7 @@ class RadialGaugeRenderBox extends RenderBox {
     super.describeSemanticsConfiguration(config);
     config
       ..label = _semanticsLabel ?? 'Radial gauge'
-      ..value = _formatLabel(_controller.value)
+      ..value = _formatCenter(_controller.value)
       ..isEnabled = _interactive
       ..textDirection = TextDirection.ltr;
     if (_interactive) {
