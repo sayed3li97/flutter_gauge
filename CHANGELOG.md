@@ -1,3 +1,8 @@
+## 0.3.2
+
+- No code changes — republishes the `0.3.1` metadata fix through the new automated
+  pub.dev publishing pipeline (GitHub Actions OIDC trusted publishing).
+
 ## 0.3.1
 
 - `pubspec.yaml` — shortened `description` to fit pub.dev's recommended 60–180
