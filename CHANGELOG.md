@@ -1,3 +1,8 @@
+## 0.3.1
+
+- `pubspec.yaml` — shortened `description` to fit pub.dev's recommended 60–180
+  character range, fixing a lost "Follow Dart file conventions" pub point.
+
 ## 0.3.0
 
 - `GaugeAnnotation` — new class for pinning arbitrary Flutter widgets at specific value
