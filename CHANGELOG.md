@@ -1,3 +1,10 @@
+## 0.3.3
+
+- No code changes — end-to-end test of the fixed automated publishing pipeline
+  (`release.yml` now explicitly dispatches `publish.yml` instead of relying on a
+  tag-push event, which GitHub's loop-prevention rule silently drops when the tag
+  is created by `GITHUB_TOKEN`).
+
 ## 0.3.2
 
 - No code changes — republishes the `0.3.1` metadata fix through the new automated
