@@ -1,3 +1,11 @@
+## 0.3.4
+
+- No code changes — fixes the automated publishing pipeline dispatching
+  `publish.yml` against `main` instead of the newly created tag. pub.dev's trusted
+  publishing config requires the OIDC token's ref to have `refType: tag` matching
+  `v{{version}}`; dispatching against a branch caused `0.3.3`'s publish attempt to
+  fail with "publishing is only allowed from 'tag' refType".
+
 ## 0.3.3
 
 - No code changes — end-to-end test of the fixed automated publishing pipeline

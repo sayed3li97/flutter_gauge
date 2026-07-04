@@ -2,7 +2,7 @@ name: gauge_kit
 description: >-
   14 Flutter gauge widgets — radial, linear, arc & more. Material 3,
   Cupertino & Executive styles. Zero dependencies. MIT licensed.
-version: 0.3.3
+version: 0.3.4
 homepage: https://github.com/sayed3li97/flutter_gauge
 repository: https://github.com/sayed3li97/flutter_gauge
 issue_tracker: https://github.com/sayed3li97/flutter_gauge/issues
