@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   release:
@@ -54,3 +55,13 @@ jobs:
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "gauge_kit ${{ steps.version.outputs.tag }}" \
             --notes-file release_notes.txt
+
+      # Tags/releases created by GITHUB_TOKEN don't trigger other workflows'
+      # `push: tags:` listeners (GitHub's loop-prevention rule) — workflow_dispatch
+      # is exempt, so we fire the publish workflow directly instead of relying on
+      # the tag push event.
+      - name: Trigger pub.dev publish workflow
+        if: steps.tag_check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run publish.yml --ref main
