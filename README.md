@@ -1,6 +1,6 @@
 # gauge_kit
 
-> **14 Flutter gauge widgets · zero dependencies · Material 3, Cupertino & Executive styles · MIT**
+> **15 Flutter gauge widgets · zero dependencies · Material 3, Cupertino & Executive styles · MIT**
 
 [![pub.dev](https://img.shields.io/pub/v/gauge_kit.svg)](https://pub.dev/packages/gauge_kit)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -55,7 +55,7 @@ screen simultaneously.
 
 | Feature | gauge_kit | Typical alternatives |
 |---------|-----------|---------------------|
-| Widget count | **14** | 2–4 |
+| Widget count | **15** | 2–4 |
 | External dependencies | **0** | 1–5 |
 | License | **MIT** | Often commercial |
 | Custom style API | **GaugeStyle / GaugeTokens** | Hard-coded or limited |
@@ -758,7 +758,78 @@ ArtificialHorizonGauge(
 
 ---
 
+### SparklineGauge
+
+A compact trend-line gauge that plots a rolling window of sample history — the
+shape a "sparkline" takes next to a big live number in a dashboard. Unlike every
+other gauge, it's driven by a [`SparklineController`](#sparklinecontroller) instead
+of `GaugeController`, since it needs a history of samples rather than a single
+live value.
+
+![Server Dashboard](doc/screenshots/server.png)
+
+```dart
+final trend = SparklineController(capacity: 40);
+Timer.periodic(const Duration(seconds: 1), (_) {
+  trend.addSample(readCpuLoad());
+});
+
+SizedBox(
+  height: 48,
+  child: SparklineGauge(
+    controller: trend,
+    min: 0,
+    max: 100,
+  ),
+)
+```
+
+#### Constructor Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `controller` | `SparklineController` | **required** | Supplies the rolling sample history |
+| `min` | `double?` | `null` | Y-axis lower bound; `null` auto-scales to the sample window |
+| `max` | `double?` | `null` | Y-axis upper bound; `null` auto-scales to the sample window |
+| `lineWidth` | `double` | `2.0` | Stroke width of the trend line |
+| `showFill` | `bool` | `true` | Fill the area under the trend line |
+| `showLastPointMarker` | `bool` | `true` | Draw a marker dot at the most recent sample |
+| `markerRadius` | `double` | `3.0` | Radius of the last-point marker |
+| `style` | `GaugeStyle?` | `null` | Visual style |
+| `mode` | `GaugeMode?` | `null` | `ambient` or `instrument` |
+| `semanticsLabel` | `String?` | `null` | Accessibility label |
+
+---
+
 ## Supporting Types
+
+### SparklineController
+
+Holds the rolling sample window for a [`SparklineGauge`](#sparklinegauge). Extends
+`ChangeNotifier` like `GaugeController`, but tracks a bounded history of discrete
+samples instead of a single live value.
+
+```dart
+final controller = SparklineController(capacity: 30);
+controller.addSample(42.0);
+controller.samples; // unmodifiable List<double>, oldest first
+controller.latest;  // most recent sample, or null if empty
+controller.clear();
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `capacity` | `int` | `50` | Maximum samples retained; oldest is dropped once exceeded |
+| `initialSamples` | `List<double>` | `[]` | Seeds the history; truncated to the tail if longer than `capacity` |
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `samples` (getter) | `List<double>` | Unmodifiable view of the current history, oldest first |
+| `latest` (getter) | `double?` | Most recent sample, or `null` if empty |
+| `addSample(value)` | `void` | Appends a sample, dropping the oldest if over `capacity` |
+| `clear({values})` | `void` | Clears history, optionally reseeding it |
+
+---
 
 ### GaugeRange
 
@@ -1041,7 +1112,7 @@ The `example/` folder ships eight live dashboards that demonstrate the full API:
 | Flight | `FlightDashboardScreen` | `ArtificialHorizonGauge`, `TapeGauge.altimeter`, `TapeGauge.airspeed`, `RadialGauge.compass` |
 | Weather | `WeatherDashboardScreen` | `ThermometerGauge`, `RadialGauge.compass`, `LinearGauge`, `ArcGauge` |
 | Audio | `AudioDashboardScreen` | `LevelMeterGauge.stereo`, `LinearGauge.volume`, `SegmentedGauge` |
-| Server | `ServerDashboardScreen` | `ArcGauge.cpuUsage`, `BulletGauge.kpi`, `StatusGauge`, `DeltaGauge` |
+| Server | `ServerDashboardScreen` | `ArcGauge.cpuUsage`, `BulletGauge.kpi`, `StatusGauge`, `DeltaGauge`, `SparklineGauge` |
 | Sub | `SubmarineDashboardScreen` | `TankGauge`, `InclinometerGauge`, `TapeGauge`, `RadialGauge` |
 | ML | `DataScienceDashboardScreen` | `BulletGauge`, `DeltaGauge`, `ArcGauge`, `SegmentedGauge` |
 | v0.3 | `SmartHomeScreen` | `ArcGauge` with `child`/`widgetIndicator`, `RadialGauge` with `annotations`, `LinearGauge` |

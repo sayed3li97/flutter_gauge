@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gauge_kit/gauge_kit.dart';
 
 void main() {
-  group('Smoke tests — all 14 gauge types render without error', () {
+  group('Smoke tests — all 15 gauge types render without error', () {
     testWidgets('RadialGauge', (tester) async {
       final c = GaugeController(initialValue: 50);
       await tester.pumpWidget(MaterialApp(
@@ -127,6 +127,18 @@ void main() {
       await tester.pumpWidget(MaterialApp(
           home: Scaffold(
               body: SizedBox(height: 200, child: TapeGauge(controller: c)))));
+      addTearDown(c.dispose);
+    });
+
+    testWidgets('SparklineGauge', (tester) async {
+      final c =
+          SparklineController(capacity: 20, initialSamples: [1, 3, 2, 5, 4, 6]);
+      await tester.pumpWidget(MaterialApp(
+          home: Scaffold(
+              body: SizedBox(
+                  height: 40,
+                  width: 120,
+                  child: SparklineGauge(controller: c)))));
       addTearDown(c.dispose);
     });
   });

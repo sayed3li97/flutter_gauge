@@ -17,6 +17,7 @@ export 'src/core/unit_converter.dart';
 export 'src/core/value_to_angle.dart';
 export 'src/core/gauge_pointer.dart';
 export 'src/core/gauge_annotation.dart';
+export 'src/core/sparkline_controller.dart';
 
 // Styles
 export 'src/styles/gauge_style.dart';
@@ -45,3 +46,4 @@ export 'src/widgets/artificial_horizon_gauge.dart';
 export 'src/widgets/odometer_gauge.dart';
 export 'src/widgets/level_meter_gauge.dart';
 export 'src/widgets/tape_gauge.dart';
+export 'src/widgets/sparkline_gauge.dart';

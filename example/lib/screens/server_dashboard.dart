@@ -17,6 +17,7 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
   final _cpu2Ctrl = GaugeController(initialValue: 38.0);
   final _memCtrl = GaugeController(initialValue: 72.0);
   final _gpuCtrl = GaugeController(initialValue: 55.0);
+  final _cpuTrendCtrl = SparklineController(capacity: 40);
 
   // Disk usage (0–100%)
   final _diskDevCtrl = GaugeController(initialValue: 68.0);
@@ -58,6 +59,7 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
       _gpuCtrl.value =
           (55.0 + 25.0 * sin(_phase * 0.7) + _rng.nextDouble() * 12)
               .clamp(0, 100);
+      _cpuTrendCtrl.addSample(_cpu1Ctrl.value);
 
       _diskDevCtrl.value = (68.0 + 0.5 * sin(_phase * 0.05)).clamp(0, 100);
       _diskHomeCtrl.value = (41.0 + 0.3 * sin(_phase * 0.03)).clamp(0, 100);
@@ -84,6 +86,7 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
     _cpu2Ctrl.dispose();
     _memCtrl.dispose();
     _gpuCtrl.dispose();
+    _cpuTrendCtrl.dispose();
     _diskDevCtrl.dispose();
     _diskHomeCtrl.dispose();
     _diskTmpCtrl.dispose();
@@ -243,6 +246,31 @@ class _ServerDashboardScreenState extends State<ServerDashboardScreen> {
                       ],
                     ),
                   ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // ── CPU Trend ──────────────────────────────────────────
+                const Text('CPU CORE 1 — LAST 40 SAMPLES', style: labelStyle),
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF2A2A2A)),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: SizedBox(
+                    height: 48,
+                    child: SparklineGauge(
+                      controller: _cpuTrendCtrl,
+                      min: 0,
+                      max: 100,
+                      style: style,
+                      mode: mode,
+                      semanticsLabel: 'CPU core 1 trend',
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 16),
