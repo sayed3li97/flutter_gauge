@@ -24,4 +24,5 @@ export 'src/engine/horizon_render.dart';
 export 'src/engine/odometer_render.dart';
 export 'src/engine/level_meter_render.dart';
 export 'src/engine/tape_render.dart';
+export 'src/engine/sparkline_render.dart';
 export 'src/engine/paint_utils.dart';

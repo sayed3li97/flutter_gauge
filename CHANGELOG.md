@@ -1,3 +1,20 @@
+## 0.4.0
+
+- `SparklineGauge` — new 15th gauge type: a compact trend-line widget that plots a
+  rolling window of sample history, for showing a recent trend next to a live
+  number (CPU load, network throughput, sensor readings, etc.).
+- `SparklineController` — new controller type backing `SparklineGauge`. Unlike
+  `GaugeController`, it tracks a bounded history of discrete samples (`addSample`,
+  `samples`, `latest`, `clear`) rather than a single live value, so it isn't
+  polluted by per-frame animation ticks.
+- `SparklineGauge` supports auto-scaling (`min`/`max` default to the visible
+  sample window), an optional area fill under the line, a last-point marker, and
+  the existing `valueGlowRadius`/`valueGlowColor` glow tokens.
+- Example app: `ServerDashboardScreen` now includes a live "CPU Core 1" sparkline
+  fed from the same controller driving the CPU arc gauge.
+- `gauge_kit_rendering.dart` now also exports `SparklineGaugeRenderBox` for direct
+  render-object access.
+
 ## 0.3.4
 
 - No code changes — fixes the automated publishing pipeline dispatching
