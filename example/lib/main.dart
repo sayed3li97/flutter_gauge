@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/car_dashboard.dart';
+import 'screens/car_styles_dashboard.dart';
 import 'screens/flight_dashboard.dart';
 import 'screens/weather_dashboard.dart';
 import 'screens/audio_dashboard.dart';
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<_HomeScreen> {
 
   static const _tabs = [
     (icon: Icons.directions_car, label: 'Car'),
+    (icon: Icons.dashboard_customize, label: 'Styles'),
     (icon: Icons.flight, label: 'Flight'),
     (icon: Icons.wb_sunny, label: 'Weather'),
     (icon: Icons.equalizer, label: 'Audio'),
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<_HomeScreen> {
         index: _tabIndex,
         children: const [
           CarDashboardScreen(),
+          CarStylesDashboardScreen(),
           FlightDashboardScreen(),
           WeatherDashboardScreen(),
           AudioDashboardScreen(),

@@ -66,6 +66,7 @@ class RadialGauge extends StatelessWidget {
     this.annotations = const [],
     this.labelFormatter,
     this.unitText,
+    this.fillColor,
   });
 
   // ─── Named constructors / presets ───────────────────────────────────────────
@@ -86,6 +87,7 @@ class RadialGauge extends StatelessWidget {
     List<GaugeAnnotation> annotations = const [],
     String Function(double)? labelFormatter,
     String? unitText,
+    Color? fillColor,
   }) {
     return RadialGauge(
       key: key,
@@ -114,6 +116,7 @@ class RadialGauge extends StatelessWidget {
       annotations: annotations,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
       child: child,
     );
   }
@@ -135,6 +138,7 @@ class RadialGauge extends StatelessWidget {
     List<GaugeAnnotation> annotations = const [],
     String Function(double)? labelFormatter,
     String? unitText,
+    Color? fillColor,
   }) {
     return RadialGauge(
       key: key,
@@ -157,6 +161,7 @@ class RadialGauge extends StatelessWidget {
       annotations: annotations,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
       child: child,
     );
   }
@@ -176,6 +181,7 @@ class RadialGauge extends StatelessWidget {
     List<GaugeAnnotation> annotations = const [],
     String Function(double)? labelFormatter,
     String? unitText,
+    Color? fillColor,
   }) {
     return RadialGauge(
       key: key,
@@ -199,6 +205,7 @@ class RadialGauge extends StatelessWidget {
       annotations: annotations,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
       child: child,
     );
   }
@@ -218,6 +225,7 @@ class RadialGauge extends StatelessWidget {
     List<GaugeAnnotation> annotations = const [],
     String Function(double)? labelFormatter,
     String? unitText,
+    Color? fillColor,
   }) {
     return RadialGauge(
       key: key,
@@ -239,6 +247,7 @@ class RadialGauge extends StatelessWidget {
       annotations: annotations,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
       child: child,
     );
   }
@@ -284,6 +293,11 @@ class RadialGauge extends StatelessWidget {
   /// Unit suffix appended to the auto-formatted centre value label.
   final String? unitText;
 
+  /// Solid fill colour for the dial face, drawn beneath the track, ticks,
+  /// and needle. Useful for skeuomorphic analog gauge clusters with an
+  /// opaque disc background instead of a transparent one.
+  final Color? fillColor;
+
   // ─── Internal ───────────────────────────────────────────────────────────────
 
   GaugeTokens _resolve(BuildContext context) {
@@ -318,6 +332,7 @@ class RadialGauge extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
     );
 
     final hasOverlays = child != null || annotations.isNotEmpty;
@@ -394,6 +409,7 @@ class _RadialGaugeLeaf extends LeafRenderObjectWidget {
     required this.semanticsLabel,
     required this.labelFormatter,
     required this.unitText,
+    required this.fillColor,
   });
 
   final GaugeController controller;
@@ -416,6 +432,7 @@ class _RadialGaugeLeaf extends LeafRenderObjectWidget {
   final String? semanticsLabel;
   final String Function(double)? labelFormatter;
   final String? unitText;
+  final Color? fillColor;
 
   @override
   RadialGaugeRenderBox createRenderObject(BuildContext context) {
@@ -440,6 +457,7 @@ class _RadialGaugeLeaf extends LeafRenderObjectWidget {
       semanticsLabel: semanticsLabel,
       labelFormatter: labelFormatter,
       unitText: unitText,
+      fillColor: fillColor,
     );
   }
 
@@ -463,6 +481,7 @@ class _RadialGaugeLeaf extends LeafRenderObjectWidget {
       ..extraPointers = extraPointers
       ..semanticsLabel = semanticsLabel
       ..labelFormatter = labelFormatter
-      ..unitText = unitText;
+      ..unitText = unitText
+      ..fillColor = fillColor;
   }
 }

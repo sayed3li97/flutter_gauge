@@ -1,3 +1,23 @@
+## 0.5.0
+
+- `RadialGauge.fillColor` — new parameter for a solid dial-face fill drawn
+  beneath the track, ticks, and needle. `ArcGauge` already had this; `RadialGauge`
+  did not, which made classic skeuomorphic analog gauge clusters (opaque dial
+  face against a transparent background) impossible to build. Threaded through
+  all four named presets (`.speedometer`, `.tachometer`, `.fuel`, `.compass`).
+- Example app: new "Styles" tab (`CarStylesDashboardScreen`) showcasing three
+  automotive instrument-cluster design languages built entirely from existing
+  gauge_kit widgets:
+  - **Minimalist EV cluster** — plain digital speed readout, `DeltaGauge` as a
+    centre-zero regen/power meter, `ArcGauge` battery, compact heading indicator
+  - **Analog twin-dial cluster** — two large `RadialGauge` dials with a solid
+    dark face via the new `fillColor`, flanked by a digital gear readout and
+    `LinearGauge` fuel/temp bars
+  - **Centered tachometer cluster** — a five-dial classic layout with an
+    oversized centre tachometer, all sharing a cream analog face via `fillColor`
+- README: documented `RadialGauge.fillColor` and added the three new gallery
+  screenshots.
+
 ## 0.4.0
 
 - `SparklineGauge` — new 15th gauge type: a compact trend-line widget that plots a
