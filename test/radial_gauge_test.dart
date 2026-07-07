@@ -57,6 +57,26 @@ void main() {
       ctrl.dispose();
     });
 
+    testWidgets('renders with fillColor without error', (tester) async {
+      final ctrl = GaugeController(initialValue: 50);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 200,
+              width: 200,
+              child: RadialGauge(
+                controller: ctrl,
+                fillColor: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      ctrl.dispose();
+    });
+
     testWidgets('applies GaugeThemeExtension', (tester) async {
       final ctrl = GaugeController(initialValue: 50);
       await tester.pumpWidget(

@@ -21,6 +21,28 @@ screen simultaneously.
 ![Car Dashboard](doc/screenshots/car.png)
 *RadialGauge (speedometer, tachometer, fuel), OdometerGauge, ArcGauge — Executive style*
 
+### Car Instrument Cluster Styles
+Three distinct automotive design languages built from the same gauge_kit
+widgets — proof that one component library spans everything from minimalist
+EV displays to classic analog gauge clusters.
+
+**Minimalist EV cluster** — plain digital speed readout, `DeltaGauge` as a
+centre-zero regen/power meter, `ArcGauge` battery, compact heading indicator.
+
+![EV Minimalist Cluster](doc/screenshots/car_style_ev.png)
+
+**Analog twin-dial cluster** — two large opaque-faced `RadialGauge` dials
+(tachometer + speedometer) using the `fillColor` parameter for a solid dark
+dial face, flanked by a digital gear readout and `LinearGauge` fuel/temp bars.
+
+![Analog Twin-Dial Cluster](doc/screenshots/car_style_analog.png)
+
+**Centered tachometer cluster** — a five-dial classic sports-car layout with
+an oversized centre tachometer flanked by four smaller instruments, all
+sharing a cream analog face via the same `fillColor` parameter.
+
+![Centered Tachometer Cluster](doc/screenshots/car_style_centered_tach.png)
+
 ### Flight Instruments
 ![Flight Dashboard](doc/screenshots/flight.png)
 *ArtificialHorizonGauge, TapeGauge (airspeed, altitude), RadialGauge (heading), InclinometerGauge — Executive style*
@@ -222,6 +244,7 @@ RadialGauge(
 | `child` | `Widget?` | `null` | Widget rendered at the center of the gauge face |
 | `annotations` | `List<GaugeAnnotation>` | `[]` | Widgets pinned at specific arc positions |
 | `extraPointers` | `List<GaugePointer>` | `[]` | Additional needles with independent controllers |
+| `fillColor` | `Color?` | `null` | Solid dial-face fill drawn beneath the track/ticks/needle — for skeuomorphic analog clusters with an opaque disc background |
 | `style` | `GaugeStyle?` | `null` | Visual style; falls back to `GaugeThemeExtension` |
 | `mode` | `GaugeMode?` | `null` | `ambient` or `instrument` rendering mode |
 | `semanticsLabel` | `String?` | `null` | Accessibility label for screen readers |
@@ -1104,11 +1127,12 @@ import 'package:gauge_kit/gauge_kit_rendering.dart';
 
 ## Example Dashboards
 
-The `example/` folder ships eight live dashboards that demonstrate the full API:
+The `example/` folder ships nine live dashboards that demonstrate the full API:
 
 | Tab | Screen | Key Widgets |
 |-----|--------|-------------|
 | Car | `CarDashboardScreen` | `RadialGauge.speedometer`, `RadialGauge.tachometer`, `OdometerGauge`, `ArcGauge` |
+| Styles | `CarStylesDashboardScreen` | Three switchable instrument-cluster styles — `DeltaGauge`, `RadialGauge.fillColor`, `LinearGauge` |
 | Flight | `FlightDashboardScreen` | `ArtificialHorizonGauge`, `TapeGauge.altimeter`, `TapeGauge.airspeed`, `RadialGauge.compass` |
 | Weather | `WeatherDashboardScreen` | `ThermometerGauge`, `RadialGauge.compass`, `LinearGauge`, `ArcGauge` |
 | Audio | `AudioDashboardScreen` | `LevelMeterGauge.stereo`, `LinearGauge.volume`, `SegmentedGauge` |

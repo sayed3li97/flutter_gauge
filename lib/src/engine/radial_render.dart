@@ -32,6 +32,7 @@ class RadialGaugeRenderBox extends RenderBox {
     String? semanticsLabel,
     String Function(double)? labelFormatter,
     String? unitText,
+    Color? fillColor,
   })  : _controller = controller,
         _tokens = tokens,
         _min = min,
@@ -51,7 +52,8 @@ class RadialGaugeRenderBox extends RenderBox {
         _extraPointers = extraPointers,
         _semanticsLabel = semanticsLabel,
         _labelFormatter = labelFormatter,
-        _unitText = unitText {
+        _unitText = unitText,
+        _fillColor = fillColor {
     _controller.addListener(_onValueChanged);
     for (final pointer in _extraPointers) {
       pointer.controller.addListener(_onValueChanged);
@@ -78,6 +80,7 @@ class RadialGaugeRenderBox extends RenderBox {
   String? _semanticsLabel;
   String Function(double)? _labelFormatter;
   String? _unitText;
+  Color? _fillColor;
 
   ui.Picture? _staticPicture;
   Size _staticSize = Size.zero;
@@ -205,6 +208,13 @@ class RadialGaugeRenderBox extends RenderBox {
     markNeedsPaint();
   }
 
+  set fillColor(Color? v) {
+    if (_fillColor == v) return;
+    _fillColor = v;
+    _staticPicture = null;
+    markNeedsPaint();
+  }
+
   @override
   void performLayout() {
     final side = constraints.biggest.shortestSide;
@@ -234,6 +244,12 @@ class RadialGaugeRenderBox extends RenderBox {
 
     final startRad = degToRad(_startAngleDeg);
     final sweepRad = degToRad(_sweepAngleDeg);
+
+    // Solid dial face, drawn beneath the track/ticks/needle.
+    if (_fillColor != null) {
+      canvas.drawCircle(center, radius - _tokens.trackStrokeWidth / 2,
+          Paint()..color = _fillColor!);
+    }
 
     // Track background
     final trackPaint = Paint()
