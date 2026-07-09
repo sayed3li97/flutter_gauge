@@ -1,3 +1,33 @@
+## 0.6.0
+
+- **Dashboard Kit** — a new high-level widget layer (`gauge_kit_dashboard_kit.dart`)
+  built on top of the core engine, for the card-based "smart dashboard" style
+  used by modern in-car booking/rental UIs: dark glass cards, gradient
+  rings/bars, and accent glow, in a responsive bento grid. Nothing here is a
+  new rendering engine — every widget is a thin `StatelessWidget` that
+  configures `ArcGauge`/`LinearGauge` via `GaugeStyle`/`GaugeTokensOverride`.
+  - `DashboardCard` / `DashboardCardHeader` / `DashboardCardStyle` — shared
+    glass-card chrome (background, border, glow, text styles).
+  - `GaugeRingCard` / `GaugeBarCard` — composite gauge widgets that wrap
+    `ArcGauge`/`LinearGauge` in a `DashboardCard`, with an `accentColor` +
+    `colorForValue` shorthand for the common case and a `gaugeStyle` escape
+    hatch for full token-level control.
+  - Eight ready-made car-domain presets — `SpeedStatCard`, `BatteryStatCard`,
+    `RangeStatCard`, `EcoScoreStatCard`, `ClimateStatCard`,
+    `TirePressureStatCard`, `FuelStatCard`, `TripStatCard` — each needing
+    only a `GaugeController` to drop in.
+  - `StatCardGrid` — a responsive hero-card-plus-grid layout that adapts its
+    column count to the available width.
+- `LinearGauge` now honours `GaugeTokens.valueGradient` for its bar fill,
+  matching the gradient support `RadialGauge` and `ArcGauge` already had.
+  This was a genuine gap — the pill-shaped gradient bars used by
+  `GaugeBarCard` were not achievable before this fix.
+- `DashboardCardHeader`'s label is now wrapped in `Flexible` with an ellipsis,
+  so longer labels (e.g. "TYRE PRESSURE") no longer overflow narrow grid tiles.
+- Example app: new "Kit" tab (`SmartCarDashboardKitScreen`) — a smart car
+  booking dashboard built entirely from the new Dashboard Kit widgets, with
+  a live-updating speed/battery/range simulation and a Start/End Trip toggle.
+
 ## 0.5.0
 
 - `RadialGauge.fillColor` — new parameter for a solid dial-face fill drawn

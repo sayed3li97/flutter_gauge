@@ -43,6 +43,16 @@ sharing a cream analog face via the same `fillColor` parameter.
 
 ![Centered Tachometer Cluster](doc/screenshots/car_style_centered_tach.png)
 
+### Smart Car Booking Dashboard (Dashboard Kit)
+The card-based, glassmorphic "smart dashboard" style seen in modern in-car
+booking/rental UIs — a bento grid of gradient-ring and pill-bar stat cards
+over a near-black glass background. Built entirely from the high-level
+[Dashboard Kit](#dashboard-kit) widgets, not raw `GaugeStyle`/`GaugeTokens`.
+
+<img src="doc/screenshots/car_dashboard_kit.png" width="360" alt="Smart Car Dashboard Kit — parked state"> <img src="doc/screenshots/car_dashboard_kit_ontrip.png" width="360" alt="Smart Car Dashboard Kit — on trip state">
+
+*`StatCardGrid` + `SpeedStatCard`, `BatteryStatCard`, `RangeStatCard`, `EcoScoreStatCard`, `ClimateStatCard`, `TirePressureStatCard`, `FuelStatCard`, `TripStatCard`*
+
 ### Flight Instruments
 ![Flight Dashboard](doc/screenshots/flight.png)
 *ArtificialHorizonGauge, TapeGauge (airspeed, altitude), RadialGauge (heading), InclinometerGauge — Executive style*
@@ -92,7 +102,7 @@ sharing a cream analog face via the same `fillColor` parameter.
 ```yaml
 # pubspec.yaml
 dependencies:
-  gauge_kit: ^0.3.0
+  gauge_kit: ^0.6.0
 ```
 
 ```dart
@@ -379,6 +389,10 @@ LinearGauge(
 | `style` | `GaugeStyle?` | `null` | Visual style |
 | `mode` | `GaugeMode?` | `null` | `ambient` or `instrument` |
 | `semanticsLabel` | `String?` | `null` | Accessibility label |
+
+> `GaugeTokens.valueGradient` paints the bar fill too (not just `RadialGauge`/`ArcGauge`) —
+> combine it with `barRadius` for the gradient pill-bar look used by `GaugeBarCard` in the
+> [Dashboard Kit](#dashboard-kit).
 
 #### Named Constructors
 
@@ -1111,6 +1125,115 @@ RadialGauge(
 
 ---
 
+## Dashboard Kit
+
+A high-level abstraction layer on top of the core engine — pre-styled,
+drop-in composite widgets for the card-based "smart dashboard" look (dark
+glass cards, gradient rings/bars, accent glow) popularised by modern in-car
+booking and rental UIs. Nothing here is a new rendering engine: every widget
+is a `StatelessWidget` that configures `ArcGauge`/`LinearGauge` through
+`GaugeStyle`/`GaugeTokensOverride` and wraps the result in rounded card
+chrome — so it stays consistent with (and fully overridable via) the core
+API documented above.
+
+Import it alongside the core barrel:
+
+```dart
+import 'package:gauge_kit/gauge_kit.dart';
+import 'package:gauge_kit/gauge_kit_dashboard_kit.dart';
+```
+
+### The easy way — ready-made presets
+
+Each preset needs nothing but a `GaugeController`:
+
+```dart
+StatCardGrid(
+  hero: SpeedStatCard(controller: speedCtrl, max: 240),
+  children: [
+    BatteryStatCard(controller: batteryCtrl),
+    RangeStatCard(controller: rangeCtrl, maxRangeKm: 500),
+    EcoScoreStatCard(controller: ecoCtrl),
+    ClimateStatCard(controller: climateCtrl),
+    TirePressureStatCard(controller: tireCtrl),
+    FuelStatCard(controller: fuelCtrl),
+    TripStatCard(controller: tripCtrl, targetKm: 50),
+  ],
+)
+```
+
+| Widget | Shape | Notes |
+|--------|-------|-------|
+| `SpeedStatCard` | Ring | Hero-sized by default (`ringSize: 140`); `Icons.speed_rounded`, blue accent |
+| `BatteryStatCard` | Ring | Turns amber then red below `lowThreshold`/`criticalThreshold` |
+| `RangeStatCard` | Ring | Remaining range in km against `maxRangeKm` |
+| `EcoScoreStatCard` | Ring | 0–100 eco-driving score |
+| `ClimateStatCard` | Ring | Cabin temperature in °C, 1-decimal display |
+| `TirePressureStatCard` | Bar | Turns red outside the `safeMin`–`safeMax` PSI range |
+| `FuelStatCard` | Bar | Turns red at/below `lowThreshold` |
+| `TripStatCard` | Bar | Distance travelled against `targetKm` |
+
+All eight accept `accentColor`, `label`, `icon`, `cardStyle`, and
+`showGlow` overrides — they're thin configuration wrappers, not opaque
+black boxes.
+
+### The composable way — build your own stat card
+
+For anything the presets don't cover, use the two widgets they're built
+from directly:
+
+```dart
+GaugeRingCard(
+  controller: pressureCtrl,
+  label: 'BOOST',
+  icon: Icons.speed_rounded,
+  accentColor: const Color(0xFFFF7A45),
+  min: 0,
+  max: 2.5,
+  unitText: 'bar',
+  colorForValue: (v) => v > 2.0 ? Colors.red : const Color(0xFFFF7A45),
+)
+
+GaugeBarCard(
+  controller: chargeRateCtrl,
+  label: 'CHARGE RATE',
+  icon: Icons.bolt_rounded,
+  accentColor: const Color(0xFF34D399),
+  max: 150,
+  unitText: 'kW',
+)
+```
+
+Both expose a `gaugeStyle` escape hatch for full token-level control when
+even that isn't enough — pass any `GaugeStyle` and it replaces the kit's
+built-in accent-colour styling entirely.
+
+### Layout — `StatCardGrid`
+
+Arranges an optional full-width hero card above a responsive grid of
+secondary cards. Column count adapts to the available width
+(`minTileWidth`), so the same grid reads as one column on a phone-sized
+panel and several on a tablet or in-car display — no manual breakpoints.
+
+### Chrome — `DashboardCard` / `DashboardCardStyle`
+
+The rounded "glass card" background, border, and accent glow used by every
+card above is itself a public widget, so a fully custom card can match the
+same look:
+
+```dart
+DashboardCard(
+  accentColor: Colors.cyan,
+  style: const DashboardCardStyle(
+    backgroundColor: Colors.white,
+    borderColor: Color(0x14000000),
+  ), // light-theme variant
+  child: Column(children: [/* anything */]),
+)
+```
+
+---
+
 ## Advanced: Direct Render Box Access
 
 For custom container widgets that need to measure or paint alongside gauge canvases,
@@ -1127,12 +1250,13 @@ import 'package:gauge_kit/gauge_kit_rendering.dart';
 
 ## Example Dashboards
 
-The `example/` folder ships nine live dashboards that demonstrate the full API:
+The `example/` folder ships ten live dashboards that demonstrate the full API:
 
 | Tab | Screen | Key Widgets |
 |-----|--------|-------------|
 | Car | `CarDashboardScreen` | `RadialGauge.speedometer`, `RadialGauge.tachometer`, `OdometerGauge`, `ArcGauge` |
 | Styles | `CarStylesDashboardScreen` | Three switchable instrument-cluster styles — `DeltaGauge`, `RadialGauge.fillColor`, `LinearGauge` |
+| Kit | `SmartCarDashboardKitScreen` | [Dashboard Kit](#dashboard-kit) only — `StatCardGrid` + all eight stat-card presets |
 | Flight | `FlightDashboardScreen` | `ArtificialHorizonGauge`, `TapeGauge.altimeter`, `TapeGauge.airspeed`, `RadialGauge.compass` |
 | Weather | `WeatherDashboardScreen` | `ThermometerGauge`, `RadialGauge.compass`, `LinearGauge`, `ArcGauge` |
 | Audio | `AudioDashboardScreen` | `LevelMeterGauge.stereo`, `LinearGauge.volume`, `SegmentedGauge` |
