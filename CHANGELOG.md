@@ -27,6 +27,10 @@
 - Example app: new "Kit" tab (`SmartCarDashboardKitScreen`) — a smart car
   booking dashboard built entirely from the new Dashboard Kit widgets, with
   a live-updating speed/battery/range simulation and a Start/End Trip toggle.
+  Ships an in-app style switcher across four presets (Midnight, Luxury Gold,
+  Neon Aurora, Daylight) that reskin the same eight stat cards purely through
+  `accentColor`/`lowColor`/`criticalColor`/`DashboardCardStyle` — no new
+  widgets or engine code.
 
 ## 0.5.0
 

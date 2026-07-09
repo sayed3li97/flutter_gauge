@@ -48,10 +48,16 @@ The card-based, glassmorphic "smart dashboard" style seen in modern in-car
 booking/rental UIs — a bento grid of gradient-ring and pill-bar stat cards
 over a near-black glass background. Built entirely from the high-level
 [Dashboard Kit](#dashboard-kit) widgets, not raw `GaugeStyle`/`GaugeTokens`.
+The example screen ships an in-app style switcher with four presets — proof
+the same eight stat-card widgets can be reskinned entirely through
+`DashboardCardStyle` and `accentColor`/`lowColor`/`criticalColor`, no engine
+code involved.
 
-<img src="doc/screenshots/car_dashboard_kit.png" width="360" alt="Smart Car Dashboard Kit — parked state"> <img src="doc/screenshots/car_dashboard_kit_ontrip.png" width="360" alt="Smart Car Dashboard Kit — on trip state">
+<img src="doc/screenshots/car_dashboard_kit.png" width="270" alt="Midnight — parked state"> <img src="doc/screenshots/car_dashboard_kit_ontrip.png" width="270" alt="Midnight — on trip state"> <img src="doc/screenshots/car_dashboard_kit_luxury.png" width="270" alt="Luxury Gold style">
 
-*`StatCardGrid` + `SpeedStatCard`, `BatteryStatCard`, `RangeStatCard`, `EcoScoreStatCard`, `ClimateStatCard`, `TirePressureStatCard`, `FuelStatCard`, `TripStatCard`*
+<img src="doc/screenshots/car_dashboard_kit_neon.png" width="270" alt="Neon Aurora style"> <img src="doc/screenshots/car_dashboard_kit_daylight.png" width="270" alt="Daylight style">
+
+*`StatCardGrid` + `SpeedStatCard`, `BatteryStatCard`, `RangeStatCard`, `EcoScoreStatCard`, `ClimateStatCard`, `TirePressureStatCard`, `FuelStatCard`, `TripStatCard` — Midnight (default), Luxury Gold, Neon Aurora, and Daylight styles*
 
 ### Flight Instruments
 ![Flight Dashboard](doc/screenshots/flight.png)
@@ -1175,7 +1181,14 @@ StatCardGrid(
 
 All eight accept `accentColor`, `label`, `icon`, `cardStyle`, and
 `showGlow` overrides — they're thin configuration wrappers, not opaque
-black boxes.
+black boxes. `BatteryStatCard`, `TirePressureStatCard`, and `FuelStatCard`
+also expose `lowColor`/`criticalColor` for their warning-state thresholds.
+
+Restyling the whole dashboard is just varying those params per card — no
+new widgets required. The example app's "Kit" tab ships four such presets
+(Midnight, Luxury Gold, Neon Aurora, Daylight) behind an in-app switcher; see
+`example/lib/screens/smart_car_dashboard_kit.dart` for the ~200-line
+`_KitStyle` config table that drives all four.
 
 ### The composable way — build your own stat card
 
@@ -1256,7 +1269,7 @@ The `example/` folder ships ten live dashboards that demonstrate the full API:
 |-----|--------|-------------|
 | Car | `CarDashboardScreen` | `RadialGauge.speedometer`, `RadialGauge.tachometer`, `OdometerGauge`, `ArcGauge` |
 | Styles | `CarStylesDashboardScreen` | Three switchable instrument-cluster styles — `DeltaGauge`, `RadialGauge.fillColor`, `LinearGauge` |
-| Kit | `SmartCarDashboardKitScreen` | [Dashboard Kit](#dashboard-kit) only — `StatCardGrid` + all eight stat-card presets |
+| Kit | `SmartCarDashboardKitScreen` | [Dashboard Kit](#dashboard-kit) only — `StatCardGrid` + all eight stat-card presets, with a switcher across 4 visual styles |
 | Flight | `FlightDashboardScreen` | `ArtificialHorizonGauge`, `TapeGauge.altimeter`, `TapeGauge.airspeed`, `RadialGauge.compass` |
 | Weather | `WeatherDashboardScreen` | `ThermometerGauge`, `RadialGauge.compass`, `LinearGauge`, `ArcGauge` |
 | Audio | `AudioDashboardScreen` | `LevelMeterGauge.stereo`, `LinearGauge.volume`, `SegmentedGauge` |
