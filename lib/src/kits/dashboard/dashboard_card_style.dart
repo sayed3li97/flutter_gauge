@@ -42,6 +42,7 @@ class DashboardCardStyle {
       fontWeight: FontWeight.w600,
     ),
     this.glowOpacity = 0.35,
+    this.trackColor = const Color(0x14FFFFFF),
   });
 
   /// Card fill colour.
@@ -73,6 +74,13 @@ class DashboardCardStyle {
   /// `showGlow` is `true`. `0` disables the glow shadow.
   final double glowOpacity;
 
+  /// Colour of the *unfilled* portion of a ring or bar gauge inside the
+  /// card. The default (a faint white wash) reads as "empty track" on the
+  /// dark [backgroundColor] default — override this alongside
+  /// [backgroundColor] for a light theme, e.g. `Color(0x14000000)`, or the
+  /// track becomes invisible against a white card.
+  final Color trackColor;
+
   /// Returns a copy with the given fields replaced.
   DashboardCardStyle copyWith({
     Color? backgroundColor,
@@ -84,6 +92,7 @@ class DashboardCardStyle {
     TextStyle? valueStyle,
     TextStyle? unitStyle,
     double? glowOpacity,
+    Color? trackColor,
   }) {
     return DashboardCardStyle(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -95,6 +104,7 @@ class DashboardCardStyle {
       valueStyle: valueStyle ?? this.valueStyle,
       unitStyle: unitStyle ?? this.unitStyle,
       glowOpacity: glowOpacity ?? this.glowOpacity,
+      trackColor: trackColor ?? this.trackColor,
     );
   }
 }

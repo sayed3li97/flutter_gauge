@@ -114,7 +114,7 @@ class GaugeBarCard extends StatelessWidget {
         final resolvedGaugeStyle = gaugeStyle ??
             const DefaultGaugeStyle().override(
               GaugeTokensOverride(
-                trackColor: const Color(0x14FFFFFF),
+                trackColor: cardStyle.trackColor,
                 valueColor: effectiveColor,
                 valueGradient: LinearGradient(
                   colors: [

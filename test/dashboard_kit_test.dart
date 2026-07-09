@@ -92,6 +92,45 @@ void main() {
       expect(tester.takeException(), isNull);
       addTearDown(c.dispose);
     });
+
+    testWidgets('GaugeListTile renders without error, grouped in a list',
+        (tester) async {
+      final battery = GaugeController(initialValue: 65);
+      final range = GaugeController(initialValue: 250);
+      await tester.pumpWidget(_host(
+        DashboardCard(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GaugeListTile(
+                controller: battery,
+                label: 'BATTERY',
+                icon: Icons.battery_charging_full_rounded,
+                accentColor: Colors.green,
+                unitText: '%',
+              ),
+              const Divider(height: 1),
+              GaugeListTile(
+                controller: range,
+                label: 'RANGE',
+                icon: Icons.route_rounded,
+                accentColor: Colors.purple,
+                unitText: 'km',
+                max: 500,
+                showTrailingIndicator: false,
+              ),
+            ],
+          ),
+        ),
+      ));
+      expect(tester.takeException(), isNull);
+      expect(find.text('65'), findsOneWidget);
+      expect(find.text('250'), findsOneWidget);
+      addTearDown(() {
+        battery.dispose();
+        range.dispose();
+      });
+    });
   });
 
   group('Stat card presets', () {

@@ -16,6 +16,9 @@
     `RangeStatCard`, `EcoScoreStatCard`, `ClimateStatCard`,
     `TirePressureStatCard`, `FuelStatCard`, `TripStatCard` — each needing
     only a `GaugeController` to drop in.
+  - `GaugeListTile` — a full-width *row* primitive (icon, label, big value,
+    slim inline indicator), for a settings-style grouped list instead of a
+    grid of tiles. Stack several inside one `DashboardCard` with dividers.
   - `StatCardGrid` — a responsive hero-card-plus-grid layout that adapts its
     column count to the available width.
 - `LinearGauge` now honours `GaugeTokens.valueGradient` for its bar fill,
@@ -24,13 +27,29 @@
   `GaugeBarCard` were not achievable before this fix.
 - `DashboardCardHeader`'s label is now wrapped in `Flexible` with an ellipsis,
   so longer labels (e.g. "TYRE PRESSURE") no longer overflow narrow grid tiles.
-- Example app: new "Kit" tab (`SmartCarDashboardKitScreen`) — a smart car
-  booking dashboard built entirely from the new Dashboard Kit widgets, with
-  a live-updating speed/battery/range simulation and a Start/End Trip toggle.
-  Ships an in-app style switcher across four presets (Midnight, Luxury Gold,
-  Neon Aurora, Daylight) that reskin the same eight stat cards purely through
-  `accentColor`/`lowColor`/`criticalColor`/`DashboardCardStyle` — no new
-  widgets or engine code.
+- `DashboardCardStyle.trackColor` — new field controlling the unfilled
+  portion of a ring/bar/list-tile gauge. Previously hardcoded to a faint
+  white wash inside `GaugeRingCard`/`GaugeBarCard`/`GaugeListTile`, which made
+  the empty track invisible against a light/white card background — a real
+  bug found while building a light-themed layout variant. `GaugeRingCard`,
+  `GaugeBarCard`, and `GaugeListTile` now all read this from `cardStyle`.
+- `SpeedStatCard` gained a `trackWidth` parameter (default `10`, matching
+  `GaugeRingCard`) so an oversized hero ring can use a proportionally
+  thicker stroke.
+- Example app: new "Kit" tab (`SmartCarDashboardKitScreen`) — an in-app
+  switcher across four *structurally different* dashboard compositions
+  (not just a recolor of one grid), each pairing a distinct layout with a
+  distinct palette:
+  - **Bento Grid** (Midnight) — hero ring + `StatCardGrid`.
+  - **List** (Luxury Gold) — compact hero banner + one grouped
+    `GaugeListTile` list.
+  - **Carousel** (Neon Aurora) — an oversized centred hero dial with a
+    horizontally swipeable strip of secondary cards.
+  - **Split Console** (Daylight) — a wide dual-pane layout (hero left,
+    scrollable stat list right), the shape of an actual in-car centre
+    console rather than a phone screen.
+  All four share the same eight `GaugeController`s and a live-updating
+  speed/battery/range simulation with a Start/End Trip toggle.
 
 ## 0.5.0
 

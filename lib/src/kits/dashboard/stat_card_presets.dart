@@ -22,6 +22,7 @@ class SpeedStatCard extends StatelessWidget {
     this.label = 'SPEED',
     this.accentColor = const Color(0xFF4F8CFF),
     this.ringSize = 140,
+    this.trackWidth = 10,
     this.showGlow = true,
     this.cardStyle = const DashboardCardStyle(),
     this.mode,
@@ -45,6 +46,10 @@ class SpeedStatCard extends StatelessWidget {
   /// Diameter of the ring gauge in logical pixels.
   final double ringSize;
 
+  /// Stroke width of the ring track and value arc. Scale this up alongside
+  /// [ringSize] for an oversized hero dial.
+  final double trackWidth;
+
   /// Whether to cast an accent-tinted glow behind the card.
   final bool showGlow;
 
@@ -65,6 +70,7 @@ class SpeedStatCard extends StatelessWidget {
       max: max,
       unitText: unitText,
       ringSize: ringSize,
+      trackWidth: trackWidth,
       showGlow: showGlow,
       cardStyle: cardStyle,
       mode: mode,

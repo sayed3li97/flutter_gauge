@@ -22,6 +22,7 @@ export 'src/kits/dashboard/dashboard_card_style.dart';
 
 // Composite gauge cards
 export 'src/kits/dashboard/gauge_bar_card.dart';
+export 'src/kits/dashboard/gauge_list_tile.dart';
 export 'src/kits/dashboard/gauge_ring_card.dart';
 
 // Layout
