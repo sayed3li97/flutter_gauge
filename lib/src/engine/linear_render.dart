@@ -379,6 +379,25 @@ class LinearGaugeRenderBox extends RenderBox {
     _paintBar(canvas, gp);
   }
 
+  /// The full track bounds, used both to size the fill/glow paint and, when
+  /// [GaugeTokens.valueGradient] is set, as the shader's coordinate space —
+  /// so the gradient spans the whole track consistently regardless of how
+  /// much of it is currently filled.
+  Rect _trackRect() {
+    final trackW = _tokens.trackStrokeWidth;
+    if (_isHorizontal) {
+      final left = trackW / 2 + 4;
+      final right = size.width - trackW / 2 - 4;
+      final cy = size.height / 2;
+      return Rect.fromLTRB(left, cy - trackW / 2, right, cy + trackW / 2);
+    } else {
+      final top = trackW / 2 + 4;
+      final bottom = size.height - trackW / 2 - 4;
+      final cx = size.width / 2;
+      return Rect.fromLTRB(cx - trackW / 2, top, cx + trackW / 2, bottom);
+    }
+  }
+
   void _paintBar(Canvas canvas, Paint paint) {
     final trackW = _tokens.trackStrokeWidth;
     final isH = _isHorizontal;
@@ -448,7 +467,11 @@ class LinearGaugeRenderBox extends RenderBox {
     final frac = valueToFraction(_controller.value, _min, _max);
     if (frac > 0) {
       _paintGlow(canvas);
-      _paintBar(canvas, Paint()..color = _tokens.valueColor);
+      final barPaint = _tokens.valueGradient != null
+          ? (Paint()
+            ..shader = _tokens.valueGradient!.createShader(_trackRect()))
+          : (Paint()..color = _tokens.valueColor);
+      _paintBar(canvas, barPaint);
     }
 
     // Value label above the bar tip

@@ -29,5 +29,33 @@ void main() {
       expect(find.byType(LinearGauge), findsOneWidget);
       ctrl.dispose();
     });
+
+    testWidgets('renders with valueGradient and barRadius without error',
+        (tester) async {
+      final ctrl = GaugeController(initialValue: 65);
+      const style = DefaultGaugeStyle();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              height: 20,
+              child: LinearGauge(
+                controller: ctrl,
+                barRadius: 10,
+                style: style.override(
+                  const GaugeTokensOverride(
+                    valueGradient: LinearGradient(
+                      colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      ctrl.dispose();
+    });
   });
 }
