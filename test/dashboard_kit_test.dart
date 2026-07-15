@@ -12,6 +12,51 @@ Widget _host(Widget child, {double width = 400, double height = 400}) {
 }
 
 void main() {
+  group('DashboardCardStyle factories', () {
+    test('dark() is exactly the default constructor', () {
+      // .dark() redirects to the default constructor, so the two produce the
+      // same canonical const instance — a single identity check guards all
+      // ten fields at once and fails the moment they could ever diverge.
+      expect(
+        identical(const DashboardCardStyle.dark(), const DashboardCardStyle()),
+        isTrue,
+      );
+    });
+
+    test('light() flips background, text, and track to light-theme values', () {
+      const light = DashboardCardStyle.light();
+      expect(light.backgroundColor, Colors.white);
+      // Track must be a dark wash so the empty track stays visible on white.
+      expect(light.trackColor, const Color(0x14000000));
+      // Value text must be dark, not the dark-theme white.
+      expect(light.valueStyle.color, const Color(0xFF0F172A));
+      expect(light.backgroundColor,
+          isNot(const DashboardCardStyle().backgroundColor));
+    });
+
+    test('factories still accept per-field overrides', () {
+      const light = DashboardCardStyle.light(cornerRadius: 12);
+      expect(light.cornerRadius, 12);
+      expect(light.backgroundColor, Colors.white); // others keep light default
+    });
+
+    testWidgets('a light-themed card renders without error', (tester) async {
+      final c = GaugeController(initialValue: 65);
+      await tester.pumpWidget(_host(
+        GaugeRingCard(
+          controller: c,
+          label: 'BATTERY',
+          icon: Icons.battery_charging_full_rounded,
+          accentColor: const Color(0xFF16A34A),
+          unitText: '%',
+          cardStyle: const DashboardCardStyle.light(),
+        ),
+      ));
+      expect(tester.takeException(), isNull);
+      addTearDown(c.dispose);
+    });
+  });
+
   group('DashboardCard chrome', () {
     testWidgets('renders with and without glow', (tester) async {
       await tester.pumpWidget(_host(

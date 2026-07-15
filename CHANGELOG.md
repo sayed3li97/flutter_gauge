@@ -1,3 +1,24 @@
+## 0.7.0
+
+- `DashboardCardStyle.light()` and `DashboardCardStyle.dark()` — new named
+  const constructors for the two common themes. `.light()` sets a coherent
+  set of light-appropriate colours in one line — white card, slate text,
+  subtle glow, and crucially a dark-tuned `trackColor` so the gauge's empty
+  track stays visible against a white card (the field most easily forgotten
+  when hand-building a light variant), and still accepts per-field overrides.
+  `.dark()` is a named alias that redirects to the existing default
+  constructor, provided for symmetry so the theme choice reads explicitly at
+  the call site.
+- Example: new `example/lib/dashboard_kit_example.dart` — a focused,
+  self-contained Dashboard Kit starting point (`StatCardGrid` + presets, a
+  `GaugeListTile` group, and both `.dark()`/`.light()` cards) separate from
+  the large multi-tab gallery. Run it with
+  `flutter run -t lib/dashboard_kit_example.dart`, and it's surfaced via a
+  rewritten `example/README.md` for the pub.dev example page.
+- README: documented the `.light()`/`.dark()` factories, added a
+  `GaugeListTile` gallery screenshot, and simplified the light-theme guidance
+  to use the new constructor instead of a manual `trackColor` override.
+
 ## 0.6.0
 
 - **Dashboard Kit** — a new high-level widget layer (`gauge_kit_dashboard_kit.dart`)

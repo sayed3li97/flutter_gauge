@@ -108,7 +108,7 @@ distinct layout with a distinct palette:
 ```yaml
 # pubspec.yaml
 dependencies:
-  gauge_kit: ^0.6.0
+  gauge_kit: ^0.7.0
 ```
 
 ```dart
@@ -1179,10 +1179,13 @@ StatCardGrid(
 | `FuelStatCard` | Bar | Turns red at/below `lowThreshold` |
 | `TripStatCard` | Bar | Distance travelled against `targetKm` |
 
-All eight accept `accentColor`, `label`, `icon`, `cardStyle`, and
-`showGlow` overrides — they're thin configuration wrappers, not opaque
-black boxes. `BatteryStatCard`, `TirePressureStatCard`, and `FuelStatCard`
-also expose `lowColor`/`criticalColor` for their warning-state thresholds.
+All eight accept `accentColor`, `label`, `cardStyle`, and `showGlow`
+overrides — they're thin configuration wrappers, not opaque black boxes.
+Each preset fixes its own semantically-appropriate `icon`; if you need a
+custom icon, drop down to the underlying `GaugeRingCard`/`GaugeBarCard`,
+which do accept one. For warning-state thresholds, `BatteryStatCard` exposes
+both `lowColor` and `criticalColor`, `TirePressureStatCard` exposes
+`criticalColor`, and `FuelStatCard` exposes `lowColor`.
 
 ### The composable way — build your own stat card
 
@@ -1248,6 +1251,11 @@ DashboardCard(
 )
 ```
 
+The tiles and rows together, top card `DashboardCardStyle.dark()` and bottom
+`DashboardCardStyle.light()` (see next section):
+
+<img src="doc/screenshots/dashboard_kit_listtile.png" width="320" alt="StatCardGrid tiles above GaugeListTile rows in a dark card and a light card">
+
 ### Layout — `StatCardGrid`
 
 Arranges an optional full-width hero card above a responsive grid of
@@ -1278,11 +1286,6 @@ See `example/lib/screens/smart_car_dashboard_kit.dart` for the ~150-line
 layout builders that drive them — all four reuse the exact same eight
 `GaugeController`s and stat-card presets.
 
-> Building a light-themed card? Also set `DashboardCardStyle.trackColor` to
-> a dark, low-alpha colour (e.g. `Color(0x14000000)`) — the default
-> (`Color(0x14FFFFFF)`, a faint white wash) is tuned for the kit's dark
-> defaults and is invisible as an "empty track" against a white card.
-
 ### Chrome — `DashboardCard` / `DashboardCardStyle`
 
 The rounded "glass card" background, border, and accent glow used by every
@@ -1292,12 +1295,32 @@ same look:
 ```dart
 DashboardCard(
   accentColor: Colors.cyan,
-  style: const DashboardCardStyle(
-    backgroundColor: Colors.white,
-    borderColor: Color(0x14000000),
-  ), // light-theme variant
   child: Column(children: [/* anything */]),
 )
+```
+
+Its chrome comes from `DashboardCardStyle`. For a light theme, reach for the
+`.light()` named constructor rather than overriding fields by hand — it sets
+a coherent set of light-appropriate colours, **including `trackColor`**,
+which is the field most easily forgotten and renders a gauge's empty track
+invisible against a white card if left dark-tuned:
+
+```dart
+// One line for the whole light-card chrome:
+GaugeRingCard(
+  controller: batteryCtrl,
+  label: 'BATTERY',
+  icon: Icons.battery_charging_full,
+  accentColor: const Color(0xFF16A34A),
+  cardStyle: const DashboardCardStyle.light(),
+)
+
+// `.light()` still takes per-field overrides:
+const branded = DashboardCardStyle.light(cornerRadius: 12);
+
+// `.dark()` is a named alias for the default constructor (which is already
+// the dark theme), for symmetry at the call site:
+const dark = DashboardCardStyle.dark();
 ```
 
 ---
@@ -1333,11 +1356,12 @@ The `example/` folder ships ten live dashboards that demonstrate the full API:
 | ML | `DataScienceDashboardScreen` | `BulletGauge`, `DeltaGauge`, `ArcGauge`, `SegmentedGauge` |
 | v0.3 | `SmartHomeScreen` | `ArcGauge` with `child`/`widgetIndicator`, `RadialGauge` with `annotations`, `LinearGauge` |
 
-Run the example:
+Run the full gallery, or the focused Dashboard Kit starting point on its own:
 
 ```bash
 cd example
-flutter run
+flutter run                                     # full multi-tab gallery
+flutter run -t lib/dashboard_kit_example.dart   # focused Dashboard Kit demo
 ```
 
 ---

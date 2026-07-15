@@ -175,7 +175,7 @@ class _Palette {
 
 const _midnight = _Palette(
   background: Color(0xFF07080C),
-  cardStyle: DashboardCardStyle(),
+  cardStyle: DashboardCardStyle.dark(),
   headerAccent: Color(0xFF4F8CFF),
   titleColor: Colors.white,
   subtitleColor: Color(0xFF8A8F98),
@@ -280,29 +280,9 @@ final _neonAurora = _Palette(
 
 final _daylight = _Palette(
   background: const Color(0xFFF3F4F7),
-  cardStyle: const DashboardCardStyle(
-    backgroundColor: Colors.white,
-    borderColor: Color(0x14000000),
-    labelStyle: TextStyle(
-      color: Color(0xFF64748B),
-      fontSize: 11,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 1.0,
-    ),
-    valueStyle: TextStyle(
-      color: Color(0xFF0F172A),
-      fontSize: 30,
-      fontWeight: FontWeight.w700,
-      height: 1.0,
-    ),
-    unitStyle: TextStyle(
-      color: Color(0xFF64748B),
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-    ),
-    glowOpacity: 0.12,
-    trackColor: Color(0x14000000),
-  ),
+  // The whole light-card chrome — background, border, slate text, subtle
+  // glow, and the dark-tuned track colour — in one named constructor.
+  cardStyle: const DashboardCardStyle.light(),
   headerAccent: const Color(0xFF2563EB),
   titleColor: const Color(0xFF0F172A),
   subtitleColor: const Color(0xFF64748B),
