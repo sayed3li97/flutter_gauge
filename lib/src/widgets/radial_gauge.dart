@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/gauge_annotation.dart';
 import '../core/gauge_controller.dart';
+import '../core/gauge_value_host.dart';
 import '../core/gauge_mode.dart';
 import '../core/gauge_pointer.dart';
 import '../core/gauge_range.dart';
@@ -23,7 +24,18 @@ import '../styles/gauge_tokens.dart';
 /// - [labelFormatter] — custom formatter for the numeric tick labels.
 /// - [unitText] — unit suffix appended to the auto-formatted centre value.
 ///
-/// Example:
+/// ## Two ways to drive it
+///
+/// For a static or simply-bound gauge, pass a plain [value] — no controller,
+/// no `StatefulWidget`, no `dispose()`. Value changes animate automatically:
+///
+/// ```dart
+/// RadialGauge(value: 60, max: 200, unitText: 'km/h', showCenterLabel: true)
+/// ```
+///
+/// For full control over animation timing, interaction, or a value shared
+/// across widgets, pass a [controller] instead:
+///
 /// ```dart
 /// RadialGauge(
 ///   controller: speedCtrl,
@@ -40,10 +52,13 @@ import '../styles/gauge_tokens.dart';
 ///   ],
 /// )
 /// ```
+///
+/// Provide exactly one of [controller] or [value].
 class RadialGauge extends StatelessWidget {
   const RadialGauge({
     super.key,
-    required this.controller,
+    this.controller,
+    this.value,
     this.min = 0,
     this.max = 100,
     this.startAngleDeg = 225,
@@ -67,7 +82,10 @@ class RadialGauge extends StatelessWidget {
     this.labelFormatter,
     this.unitText,
     this.fillColor,
-  });
+  }) : assert(
+          (controller == null) != (value == null),
+          'RadialGauge requires exactly one of controller or value.',
+        );
 
   // ─── Named constructors / presets ───────────────────────────────────────────
 
@@ -254,7 +272,19 @@ class RadialGauge extends StatelessWidget {
 
   // ─── Properties ─────────────────────────────────────────────────────────────
 
-  final GaugeController controller;
+  /// Drives the gauge value. Provide this **or** [value], not both.
+  ///
+  /// Use a controller when you need to animate imperatively, share one value
+  /// across widgets, or handle interaction. For a static or simply-bound
+  /// gauge, pass [value] instead and skip the controller lifecycle entirely.
+  final GaugeController? controller;
+
+  /// A plain value to display. Provide this **or** [controller], not both.
+  ///
+  /// When set, the gauge manages its own controller internally (no `dispose()`
+  /// needed) and animates smoothly whenever [value] changes.
+  final double? value;
+
   final double min;
   final double max;
   final double startAngleDeg;
@@ -309,6 +339,16 @@ class RadialGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null) return _buildWithController(context, controller!);
+    // Value mode: host manages an internal controller (no dispose needed).
+    return GaugeValueHost(
+      value: value!,
+      builder: _buildWithController,
+    );
+  }
+
+  Widget _buildWithController(
+      BuildContext context, GaugeController controller) {
     final tokens = _resolve(context);
 
     final leaf = _RadialGaugeLeaf(
