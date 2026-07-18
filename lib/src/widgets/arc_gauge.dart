@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
+import '../core/gauge_value_host.dart';
 import '../core/gauge_mode.dart';
 import '../core/gauge_range.dart';
 import '../engine/arc_render.dart';
@@ -17,19 +18,27 @@ import '../styles/gauge_tokens.dart';
 /// fills the arc from the far end, [fillColor] colours the inner circle, and
 /// [unitText] appends a unit suffix to the auto-formatted centre value.
 ///
+/// Pass a plain [value] for a static or simply-bound gauge (no controller,
+/// no `dispose()`, animates on change), or a [controller] for full control:
+///
 /// ```dart
+/// ArcGauge(value: 72, unitText: '%')            // value-only
+///
 /// ArcGauge(
-///   controller: cpuCtrl,
+///   controller: cpuCtrl,                         // controller-driven
 ///   unitText: '%',
 ///   fillColor: Colors.black12,
 ///   header: const Text('CPU', style: TextStyle(fontWeight: FontWeight.bold)),
 ///   footer: const Text('utilisation'),
 /// )
 /// ```
+///
+/// Provide exactly one of [controller] or [value].
 class ArcGauge extends StatelessWidget {
   const ArcGauge({
     super.key,
-    required this.controller,
+    this.controller,
+    this.value,
     this.min = 0,
     this.max = 100,
     this.startAngleDeg = 135,
@@ -49,7 +58,10 @@ class ArcGauge extends StatelessWidget {
     this.unitText,
     this.widgetIndicator,
     this.backgroundWidth,
-  });
+  }) : assert(
+          (controller == null) != (value == null),
+          'ArcGauge requires exactly one of controller or value.',
+        );
 
   /// Download/upload speed preset (0–[maxMbps] Mbps).
   factory ArcGauge.networkSpeed({
@@ -112,7 +124,16 @@ class ArcGauge extends StatelessWidget {
   }
 
   // ─── Core params ────────────────────────────────────────────────────────────
-  final GaugeController controller;
+
+  /// Drives the gauge value. Provide this **or** [value], not both. Use a
+  /// controller for imperative animation, interaction, or a shared value.
+  final GaugeController? controller;
+
+  /// A plain value to display. Provide this **or** [controller], not both.
+  /// When set, the gauge manages its own controller internally (no `dispose()`
+  /// needed) and animates whenever [value] changes.
+  final double? value;
+
   final double min;
   final double max;
   final double startAngleDeg;
@@ -185,6 +206,13 @@ class ArcGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null) return _buildWithController(context, controller!);
+    // Value mode: host manages an internal controller (no dispose needed).
+    return GaugeValueHost(value: value!, builder: _buildWithController);
+  }
+
+  Widget _buildWithController(
+      BuildContext context, GaugeController controller) {
     final tokens = _resolve(context);
     final effectiveTrackW = backgroundWidth ?? tokens.trackStrokeWidth;
 

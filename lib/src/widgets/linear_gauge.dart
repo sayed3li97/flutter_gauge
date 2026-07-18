@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/gauge_controller.dart';
+import '../core/gauge_value_host.dart';
 import '../core/gauge_mode.dart';
 import '../core/gauge_range.dart';
 import '../engine/linear_render.dart';
@@ -18,9 +19,14 @@ export '../engine/linear_render.dart' show LinearGaugeOrientation;
 /// to fill from the far end, [showValue] to display the value at the tip, and
 /// [labelFormatter] for custom tick-label text.
 ///
+/// Pass a plain [value] for a static or simply-bound bar (no controller, no
+/// `dispose()`, animates on change), or a [controller] for full control:
+///
 /// ```dart
+/// LinearGauge(value: 0.7 * 100, showValue: true)   // value-only
+///
 /// LinearGauge(
-///   controller: downloadCtrl,
+///   controller: downloadCtrl,                       // controller-driven
 ///   max: 100,
 ///   unitText: 'MB/s',
 ///   showValue: true,
@@ -28,10 +34,13 @@ export '../engine/linear_render.dart' show LinearGaugeOrientation;
 ///   trailing: const Icon(Icons.download),
 /// )
 /// ```
+///
+/// Provide exactly one of [controller] or [value].
 class LinearGauge extends StatelessWidget {
   const LinearGauge({
     super.key,
-    required this.controller,
+    this.controller,
+    this.value,
     this.min = 0,
     this.max = 100,
     this.orientation = LinearGaugeOrientation.horizontal,
@@ -51,7 +60,10 @@ class LinearGauge extends StatelessWidget {
     this.unitText,
     this.labelFormatter,
     this.barRadius,
-  });
+  }) : assert(
+          (controller == null) != (value == null),
+          'LinearGauge requires exactly one of controller or value.',
+        );
 
   /// Horizontal progress bar — no ticks or labels.
   factory LinearGauge.progress({
@@ -121,7 +133,16 @@ class LinearGauge extends StatelessWidget {
   }
 
   // ─── Core params ────────────────────────────────────────────────────────────
-  final GaugeController controller;
+
+  /// Drives the bar value. Provide this **or** [value], not both. Use a
+  /// controller for imperative animation, interaction, or a shared value.
+  final GaugeController? controller;
+
+  /// A plain value to display. Provide this **or** [controller], not both.
+  /// When set, the gauge manages its own controller internally (no `dispose()`
+  /// needed) and animates whenever [value] changes.
+  final double? value;
+
   final double min;
   final double max;
   final LinearGaugeOrientation orientation;
@@ -180,6 +201,13 @@ class LinearGauge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null) return _buildWithController(context, controller!);
+    // Value mode: host manages an internal controller (no dispose needed).
+    return GaugeValueHost(value: value!, builder: _buildWithController);
+  }
+
+  Widget _buildWithController(
+      BuildContext context, GaugeController controller) {
     final tokens = _resolve(context);
     final trackW = tokens.trackStrokeWidth;
 

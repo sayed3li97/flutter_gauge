@@ -1,3 +1,24 @@
+## 0.8.0
+
+- **Value-only gauges — no controller, no `dispose()`.** `RadialGauge`,
+  `ArcGauge`, and `LinearGauge` now accept a plain `value` as an alternative to
+  a `GaugeController`: `RadialGauge(value: 60, max: 200)`. The widget manages an
+  internal controller for you and animates smoothly whenever `value` changes
+  (like `AnimatedContainer`), so a static or simply-bound gauge no longer needs
+  a `StatefulWidget` + controller + disposal. Pass exactly one of `controller`
+  or `value` (enforced by an assertion). Fully backward compatible — the
+  `controller:` path is unchanged; it is just no longer `required`.
+- pubspec: added a `screenshots:` field (10 curated images) so the pub.dev
+  package page shows a screenshot carousel and search-result tiles get a
+  thumbnail — important for a visual widget library.
+- pubspec: description now includes the high-intent search terms `speedometer`,
+  `tachometer`, and `progress`.
+- README: leads the Quick Start with the value-only one-liner; adds a
+  `syncfusion_flutter_gauges` comparison (MIT + zero dependencies vs the
+  Syncfusion suite's Community/commercial license and `syncfusion_flutter_core`
+  + `intl` dependencies) and a short migration note. The value-only API is
+  documented in each widget's dartdoc.
+
 ## 0.7.0
 
 - `DashboardCardStyle.light()` and `DashboardCardStyle.dark()` — new named

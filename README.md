@@ -8,10 +8,11 @@
 [![Dart SDK](https://img.shields.io/badge/Dart-%3E%3D3.3-blue.svg)](https://dart.dev)
 [![Platform](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20web%20%7C%20macos%20%7C%20linux%20%7C%20windows-lightgrey.svg)](https://flutter.dev/multi-platform)
 
-A production-ready, canvas-first gauge library for Flutter. Every widget is a
-`LeafRenderObjectWidget` driven by `GaugeController` — only the live pointer layer
-repaints on each update, keeping frame budgets comfortable even with many gauges on
-screen simultaneously.
+A production-ready, canvas-first gauge library for Flutter. Drop in a gauge with
+a single `value` — no controller boilerplate — or wire up a `GaugeController`
+when you need imperative animation and interaction. Rendering is canvas-based
+(`LeafRenderObjectWidget`): only the live pointer layer repaints on each update,
+so frame budgets stay comfortable even with many gauges on screen at once.
 
 ---
 
@@ -91,15 +92,25 @@ distinct layout with a distinct palette:
 
 ## Why gauge_kit?
 
-| Feature | gauge_kit | Typical alternatives |
-|---------|-----------|---------------------|
-| Widget count | **15** | 2–4 |
-| External dependencies | **0** | 1–5 |
-| License | **MIT** | Often commercial |
-| Custom style API | **GaugeStyle / GaugeTokens** | Hard-coded or limited |
-| Render architecture | **LeafRenderObjectWidget** | Often uses Stack/Paint |
-| Accessibility | **Built-in Semantics on every widget** | Optional or absent |
-| Flutter platforms | **All 6** | Usually mobile-only |
+The most popular Flutter gauge library, `syncfusion_flutter_gauges`, is part of
+the Syncfusion suite: it requires a Syncfusion **Community or commercial
+license** and pulls in `syncfusion_flutter_core` + `intl` as dependencies.
+`gauge_kit` is **MIT-licensed with zero runtime dependencies**, covers 15 gauge
+types (plus a high-level [Dashboard Kit](#dashboard-kit)), and every widget can
+be driven by a plain `value` with no controller boilerplate.
+
+| Feature | gauge_kit | syncfusion_flutter_gauges |
+|---------|-----------|---------------------------|
+| Gauge widget types | **15** + Dashboard Kit | 2 (radial, linear) |
+| License | **MIT** | Syncfusion Community / commercial |
+| Runtime dependencies | **0** | `syncfusion_flutter_core`, `intl` |
+| No-controller value API | **Yes** — `RadialGauge(value: 60)` | Declarative pointers |
+| Custom style API | **GaugeStyle / GaugeTokens** | Themeable |
+| Accessibility | **Built-in Semantics on every widget** | Partial |
+| Flutter platforms | **All 6** | All 6 |
+
+*Not affiliated with Syncfusion. Comparison reflects the packages' own pub.dev
+metadata and licensing as published.*
 
 ---
 
@@ -108,7 +119,7 @@ distinct layout with a distinct palette:
 ```yaml
 # pubspec.yaml
 dependencies:
-  gauge_kit: ^0.7.0
+  gauge_kit: ^0.8.0
 ```
 
 ```dart
@@ -119,24 +130,39 @@ import 'package:gauge_kit/gauge_kit.dart';
 
 ## Quick Start
 
+The simplest usage — pass a plain `value`. No `StatefulWidget`, no controller,
+no `dispose()`. Value changes animate automatically:
+
 ```dart
 import 'package:flutter/material.dart';
 import 'package:gauge_kit/gauge_kit.dart';
 
-class MyGaugeScreen extends StatefulWidget {
-  const MyGaugeScreen({super.key});
+// A complete, live gauge — one widget:
+RadialGauge(value: 60, max: 200, unitText: 'km/h', showCenterLabel: true)
 
-  @override
-  State<MyGaugeScreen> createState() => _MyGaugeScreenState();
-}
+// Works the same on the arc and linear gauges:
+ArcGauge(value: 72, unitText: '%')
+LinearGauge(value: 45, showValue: true)
+```
 
+Bind it to your own state and it animates on rebuild, like `AnimatedContainer`:
+
+```dart
+RadialGauge(value: _speed, max: 200) // updates + animates when _speed changes
+```
+
+### When you need more control — use a `GaugeController`
+
+Reach for a controller when you want to drive animations imperatively, handle
+interaction, or share one value across widgets:
+
+```dart
 class _MyGaugeScreenState extends State<MyGaugeScreen> {
-  // 1. Create a controller — it's a ChangeNotifier.
   final _ctrl = GaugeController(initialValue: 60);
 
   @override
   void dispose() {
-    _ctrl.dispose(); // Always dispose.
+    _ctrl.dispose();
     super.dispose();
   }
 
@@ -144,7 +170,6 @@ class _MyGaugeScreenState extends State<MyGaugeScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // 2. Drop in any gauge widget.
         SizedBox(
           width: 200, height: 200,
           child: RadialGauge.speedometer(controller: _ctrl, max: 200),
@@ -158,6 +183,12 @@ class _MyGaugeScreenState extends State<MyGaugeScreen> {
   }
 }
 ```
+
+> **Coming from `syncfusion_flutter_gauges`?** The value-only API maps closely
+> to Syncfusion's declarative model: `SfRadialGauge(...NeedlePointer(value: 60))`
+> becomes `RadialGauge(value: 60)`. Coloured `GaugeRange`s carry over by name
+> (`GaugeRange(min:, max:, color:)`); axis bounds are `min`/`max`; and the arc
+> span is `startAngleDeg`/`sweepAngleDeg`.
 
 ---
 

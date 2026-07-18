@@ -1,12 +1,36 @@
 name: gauge_kit
 description: >-
-  15 Flutter gauge widgets — radial, linear, arc & more. Material 3,
-  Cupertino & Executive styles. Zero dependencies. MIT licensed.
-version: 0.7.0
+  15 Flutter gauge widgets — speedometer, tachometer, radial, linear, arc,
+  progress & dashboard cards. Material 3 & Cupertino. Zero dependencies. MIT.
+version: 0.8.0
 homepage: https://github.com/sayed3li97/flutter_gauge
 repository: https://github.com/sayed3li97/flutter_gauge
 issue_tracker: https://github.com/sayed3li97/flutter_gauge/issues
 topics: [gauge, dashboard, visualization, material3, chart]
+
+# Rendered as a carousel on the pub.dev package page and as the thumbnail on
+# search-result tiles — important for a visual widget library.
+screenshots:
+  - description: Smart car booking dashboard built from the Dashboard Kit — gradient rings and pill bars in a bento grid.
+    path: doc/screenshots/car_dashboard_kit_bento.png
+  - description: Car instrument cluster — speedometer, tachometer, and fuel radial gauges with an odometer.
+    path: doc/screenshots/car.png
+  - description: Dashboard Kit primitives — GaugeListTile rows in dark and light cards above ring and bar stat tiles.
+    path: doc/screenshots/dashboard_kit_listtile.png
+  - description: Aviation instruments — artificial horizon, airspeed and altitude tapes, and a heading gauge.
+    path: doc/screenshots/flight.png
+  - description: Weather station — thermometer, compass, and arc gauges.
+    path: doc/screenshots/weather.png
+  - description: Server monitor — CPU, memory and disk arc gauges with bullet, status and sparkline widgets.
+    path: doc/screenshots/server.png
+  - description: Analog twin-dial car cluster using solid dial-face fills.
+    path: doc/screenshots/car_style_analog.png
+  - description: Smart home energy monitor — arc and radial gauges with widget overlays, annotations and glow.
+    path: doc/screenshots/smarthome.png
+  - description: Audio mixer — stereo level meters and volume sliders.
+    path: doc/screenshots/audio.png
+  - description: Data-science dashboard — bullet, delta, arc and segmented gauges.
+    path: doc/screenshots/ml.png
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
